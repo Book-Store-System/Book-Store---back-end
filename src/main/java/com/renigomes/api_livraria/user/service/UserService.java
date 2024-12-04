@@ -1,7 +1,5 @@
 package com.renigomes.api_livraria.user.service;
 
-import com.renigomes.api_livraria.book.util.Utilities;
-import com.renigomes.api_livraria.security.service.TokenService;
 import com.renigomes.api_livraria.user.DTO.UserRespDto;
 import com.renigomes.api_livraria.user.enums.Status;
 import com.renigomes.api_livraria.user.exceptions.UserNotFoundException;
@@ -13,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +27,11 @@ public class UserService {
     @Autowired
     private Utilites utilites;
 
-    public UserDetails findByEmail(String email){
-
-        return userRepository.findByEmail(email);
+    public UserDetails findByEmailAuth(String email){
+        return userRepository.findByEmailAuth(email);
+    }
+    public User findByEmail(String email){
+        return userRepository.findByEmail(email).orElse(null);
     }
     @Transactional
     public UserRespDto save(User user){

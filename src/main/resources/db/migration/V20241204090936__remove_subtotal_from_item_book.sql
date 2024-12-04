@@ -1,0 +1,1 @@
+ALTER TABLE item_book DROP COLUMN subtotal;

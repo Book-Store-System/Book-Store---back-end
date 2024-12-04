@@ -29,7 +29,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         String token = recorverToken(request);
         if(token != null){
             String subject = tokenService.valueDateToken(token);
-            UserDetails userDetails = userRepository.findByEmail(subject);
+            UserDetails userDetails = userRepository.findByEmailAuth(subject);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities()
             );

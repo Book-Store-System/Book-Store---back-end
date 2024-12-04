@@ -21,7 +21,7 @@ public class Utilites {
         String token = authHeader == null ? null :
                 authHeader.replace("Bearer ", "");
         String suject = tokenService.valueDateToken(token);
-        return (User) userRepository.findByEmail(suject);
+        return (User) userRepository.findByEmailAuth(suject);
 
     }
 

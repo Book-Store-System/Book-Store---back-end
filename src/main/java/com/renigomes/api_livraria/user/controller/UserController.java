@@ -54,7 +54,7 @@ public class UserController {
     )
     @GetMapping()
     public ResponseEntity<?> findByEmail(@RequestParam String email){
-        User user = (User) userService.findByEmail(email);
+        User user = (User) userService.findByEmailAuth(email);
         if (user == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(modelMapper.map(user, UserRespDto.class));
@@ -66,7 +66,8 @@ public class UserController {
     )
     @PostMapping("/register")
     public ResponseEntity<?> createUserClient(@RequestBody @Valid UserReqDto userReqDto){
-        if (userService.findByEmail(userReqDto.getEmail()) != null)
+        if (userService.
+                findByEmailAuth(userReqDto.getEmail()) != null)
             return ResponseEntity.badRequest().body("This user has already been registered");
 
         User user = modelMapper.map(userReqDto, User.class);
@@ -81,7 +82,7 @@ public class UserController {
     )
     @PostMapping("/register/admin")
     public ResponseEntity<?> createUserAdmin(@RequestBody @Valid UserReqDto userReqDto){
-        if (userService.findByEmail(userReqDto.getEmail()) != null)
+        if (userService.findByEmailAuth(userReqDto.getEmail()) != null)
             return ResponseEntity.badRequest().body("This admin has already been registered");
 
         User user = modelMapper.map(userReqDto, User.class);
