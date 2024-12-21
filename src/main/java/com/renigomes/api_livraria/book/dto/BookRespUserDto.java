@@ -33,15 +33,15 @@ public class BookRespUserDto implements Serializable {
     @NotBlank
     private  String language;
     @NotBlank
-    private String publisher;
+    private  String publisher;
     @NotNull
     private LocalDate publicationDate;
     @NotNull
     @Positive
-    private Integer numberOfPages;
+    private  Integer numberOfPages;
     @NotBlank
-    private String dimensions;
+    private  String dimensions;
     @NotNull
     @Positive
-    private Integer barcode;
+    private  Integer barcode;
 }

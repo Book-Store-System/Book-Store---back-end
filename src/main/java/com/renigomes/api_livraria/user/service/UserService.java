@@ -27,7 +27,7 @@ public class UserService {
     @Autowired
     private Utilites utilites;
 
-    public UserDetails findByEmail(String email){
+    public UserDetails findByEmailAuth(String email){
         return userRepository.findByEmail(email);
     }
 

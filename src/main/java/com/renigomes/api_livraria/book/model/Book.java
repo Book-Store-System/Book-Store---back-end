@@ -29,6 +29,5 @@ public class Book {
     private Integer numberOfPages;
     private String dimensions;
     private Integer barcode;
-    private LocalDate registeredIn;
+    private LocalDate registeredOn;
 }
-

@@ -45,9 +45,8 @@ public class BookService {
                     .flatMap(List::stream)
                     .toList();
 
-            List<BookStockRespUserDto> bookStock = utilities.bookOrganizer(listStockBook);
-            if (bookStock!=null)
-                return bookStock;
+            List<BookStockRespUserDto> bookOrganizer = utilities.bookOrganizer(listStockBook);
+            if (bookOrganizer != null) return bookOrganizer;
             log.error("Book out of stock!");
             throw new OutStockException("Book out of stock!", HttpStatus.BAD_REQUEST);
         }

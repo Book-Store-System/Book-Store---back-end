@@ -23,11 +23,8 @@ public class BookStock {
     private Book book;
     @Column(name = "qnt_stock")
     private Long quantityInStock;
-    @Column(name = "purchase_price")
+    private double profitMargin;
     private BigDecimal purchasePrice;
-    @Column(name = "profit_margin")
-    private Double profitMargin;
     private LocalDate lastPurchase;
-
 
 }

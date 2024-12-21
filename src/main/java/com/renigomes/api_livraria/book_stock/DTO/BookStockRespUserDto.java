@@ -1,6 +1,5 @@
 package com.renigomes.api_livraria.book_stock.DTO;
 
-import com.renigomes.api_livraria.book.dto.BookReqDto;
 import com.renigomes.api_livraria.book.dto.BookRespUserDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,18 +22,18 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class BookStockRespUserDto implements Serializable {
     @NotNull
-    private BookRespUserDto book;
+    private  BookRespUserDto book;
     @NotNull
     @Positive
     private  Long quantityInStock;
     @NotNull
     @Positive
+    private double profitMargin;
+    @NotNull
+    @Positive
     private BigDecimal purchasePrice;
     @NotNull
     @Positive
-    private Double profitMargin;
-    @NotNull
-    private LocalDate lastPurchase;
-    @NotNull
     private BigDecimal salePrice;
+
 }
