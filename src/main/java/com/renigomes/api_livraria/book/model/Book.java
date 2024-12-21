@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity(name = "book")
 @Setter
@@ -22,9 +23,11 @@ public class Book {
     private String genre;
     private String description;
     private String picture;
-    @Column(name = "purchase_price")
-    private BigDecimal purchasePrice;
-    @Column(name = "profit_margin")
-    private Double profitMargin;
     private String language;
+    private String publisher;
+    private LocalDate publicationDate;
+    private Integer numberOfPages;
+    private String dimensions;
+    private Integer barcode;
+    private LocalDate registeredOn;
 }

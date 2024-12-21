@@ -20,13 +20,13 @@ public class Utilities {
     private ModelMapper modelMapper;
 
 
-    private BigDecimal calculateTotalPrice(Book book){
-        return book.getPurchasePrice().add(
-                book.getPurchasePrice()
+    private BigDecimal calculateTotalPrice(BookStock bookStock){
+        return bookStock.getPurchasePrice().add(
+                bookStock.getPurchasePrice()
                         .multiply(
                                 BigDecimal
                                         .valueOf(
-                                                book.getProfitMargin()
+                                                bookStock.getProfitMargin()
                                         )
                         )
         );
@@ -38,14 +38,13 @@ public class Utilities {
                     .stream()
                     .map(bookStock -> {
                         BookRespUserDto bookRespUserDto = modelMapper.map(bookStock.getBook(), BookRespUserDto.class);
-                        bookRespUserDto.setTotalPrice(calculateTotalPrice(bookStock.getBook()));
                         BookStockRespUserDto bookStockRespUserDto = modelMapper.map(bookStock, BookStockRespUserDto.class);
                         bookStockRespUserDto.setBook(bookRespUserDto);
+                        bookStockRespUserDto.setSalePrice(calculateTotalPrice(bookStock));
                         return bookStockRespUserDto;
                     }).toList();
         }
-        log.error("Book out of stock!");
-        throw new OutStockException("Book out of stock!", HttpStatus.BAD_REQUEST);
+        return null;
     }
 
 }

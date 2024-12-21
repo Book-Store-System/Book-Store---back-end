@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -25,16 +26,14 @@ public class BookStockRespUserDto implements Serializable {
     @NotNull
     @Positive
     private  Long quantityInStock;
-    @NotBlank
-    private  String publisher;
-    @NotNull
-    private  LocalDate publicationDate;
     @NotNull
     @Positive
-    private  Integer numberOfPages;
-    @NotBlank
-    private  String dimensions;
+    private double profitMargin;
     @NotNull
     @Positive
-    private  Integer barcode;
+    private BigDecimal purchasePrice;
+    @NotNull
+    @Positive
+    private BigDecimal salePrice;
+
 }

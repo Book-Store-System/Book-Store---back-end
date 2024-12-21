@@ -28,11 +28,9 @@ public class UserService {
     private Utilites utilites;
 
     public UserDetails findByEmailAuth(String email){
-        return userRepository.findByEmailAuth(email);
+        return userRepository.findByEmail(email);
     }
-    public User findByEmail(String email){
-        return userRepository.findByEmail(email).orElse(null);
-    }
+
     @Transactional
     public UserRespDto save(User user){
         User readerSave = userRepository.save(user);
