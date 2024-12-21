@@ -1,13 +1,17 @@
 package com.renigomes.api_livraria.book_stock.DTO;
 
 import com.renigomes.api_livraria.book.dto.BookReqDto;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -15,22 +19,29 @@ import java.time.LocalDate;
  */
 @AllArgsConstructor
 @Getter
+@Setter
 public class BookStockReqDto implements Serializable {
     @NotNull
-    private final BookReqDto book;
+    private  BookReqDto book;
     @NotNull
     @Positive
-    private final Long quantityInStock;
+    private  Long quantityInStock;
+    @NotNull
+    @Positive
+    private BigDecimal purchasePrice;
+    @NotNull
+    @Positive
+    private Double profitMargin;
     @NotBlank
-    private final String publisher;
+    private String publisher;
     @NotNull
-    private final LocalDate publicationDate;
+    private LocalDate publicationDate;
     @NotNull
     @Positive
-    private final Integer numberOfPages;
+    private Integer numberOfPages;
     @NotBlank
-    private final String dimensions;
+    private String dimensions;
     @NotNull
     @Positive
-    private final Integer barcode;
+    private Integer barcode;
 }

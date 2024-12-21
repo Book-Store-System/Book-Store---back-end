@@ -59,6 +59,10 @@ public class BookStockService {
 
     public List<BookStockRespUserDto> findAllBooks(){
         List<BookStock> books = bookStockRepository.findAll();
-        return utilities.bookOrganizer(books);
+        List<BookStockRespUserDto> bookStock = utilities.bookOrganizer(books);
+        if (bookStock!=null)
+            return bookStock;
+        log.error("Book out of stock!");
+        throw new OutStockException("Book out of stock!", HttpStatus.BAD_REQUEST);
     }
 }

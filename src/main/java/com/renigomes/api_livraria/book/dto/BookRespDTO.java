@@ -14,7 +14,4 @@ public class BookRespDTO {
     private Long id;
     @NotBlank
     private String titulo;
-    @NotNull
-    private BigDecimal purchasePrice;
-    private String picture;
 }

@@ -1,6 +1,7 @@
 package com.renigomes.api_livraria.book.service;
 
 import com.renigomes.api_livraria.book.exception.NotFoundException;
+import com.renigomes.api_livraria.book.exception.OutStockException;
 import com.renigomes.api_livraria.book.model.Book;
 import com.renigomes.api_livraria.book.repository.BookRepository;
 import com.renigomes.api_livraria.book.util.Utilities;
@@ -44,7 +45,11 @@ public class BookService {
                     .flatMap(List::stream)
                     .toList();
 
-            return utilities.bookOrganizer(listStockBook);
+            List<BookStockRespUserDto> bookStock = utilities.bookOrganizer(listStockBook);
+            if (bookStock!=null)
+                return bookStock;
+            log.error("Book out of stock!");
+            throw new OutStockException("Book out of stock!", HttpStatus.BAD_REQUEST);
         }
         log.error("Book not found!");
         throw new NotFoundException("Book not found!", HttpStatus.BAD_REQUEST);
