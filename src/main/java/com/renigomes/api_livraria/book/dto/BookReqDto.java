@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  * DTO for {@link com.renigomes.api_livraria.book.model.Book}
@@ -27,14 +28,20 @@ public class BookReqDto implements Serializable {
     private  String description;
     @NotBlank
     private  String picture;
-    @NotNull
-    @Positive
-    private  BigDecimal purchasePrice;
-    @NotNull
-    @Positive
-    private  Double profitMargin;
     @NotBlank
     private String language;
+    @NotBlank
+    private String publisher;
+    @NotNull
+    private LocalDate publicationDate;
+    @NotNull
+    @Positive
+    private Integer numberOfPages;
+    @NotBlank
+    private String dimensions;
+    @NotNull
+    @Positive
+    private String barcode;
 
 
 }

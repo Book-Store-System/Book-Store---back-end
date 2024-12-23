@@ -31,32 +31,18 @@ public class SecurityConfig {
 
     public static final String SECURITY = "bearerAuth";
 
-    private static final String[] SWAGGER_WHITELIST = {
-            "/v2/api-docs",
-            "/v3/api-docs/**",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/swagger-ui/**",
-            "/webjars/**"
-    };
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(SWAGGER_WHITELIST).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/user").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/user/{id}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/api/user/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/user/register/admin").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/api/user/{id}/active_user").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/book").hasRole("ADMIN")
+                        .requestMatchers(SecurityPermission.SWAGGER_WHITELIST).permitAll()
+                        .requestMatchers(HttpMethod.GET, SecurityPermission.API_PERMISSION_GET_ADMIN).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, SecurityPermission.API_PERMISSION_PERMISSION_ALL_POST).permitAll()
+                        .requestMatchers(HttpMethod.GET, SecurityPermission.API_PERMISSION_PERMISSION_ALL_GET).permitAll()
+                        .requestMatchers(HttpMethod.POST, SecurityPermission.API_PERMISSION_POST_ADMIN).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, SecurityPermission.API_PERMISSION_PATCH_ADMIN).hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

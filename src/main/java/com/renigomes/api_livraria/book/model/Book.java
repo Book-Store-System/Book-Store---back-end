@@ -1,13 +1,12 @@
 package com.renigomes.api_livraria.book.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Entity(name = "book")
 @Setter
@@ -26,8 +25,10 @@ public class Book {
     private String language;
     private String publisher;
     private LocalDate publicationDate;
+    @Column(name="number_of_page")
     private Integer numberOfPages;
+    @Column(name="dimension")
     private String dimensions;
-    private Integer barcode;
+    private String barcode;
     private LocalDate registeredOn;
 }
