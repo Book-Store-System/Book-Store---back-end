@@ -39,10 +39,7 @@ public class BookService {
         if (!listBook.isEmpty()){
             List<BookStock> listStockBook = listBook
                     .stream()
-                    .map(book -> bookStockRepository.findByBook(book))
-                    .toList()
-                    .stream()
-                    .flatMap(List::stream)
+                    .map(book -> bookStockRepository.findByBook(book).get())
                     .toList();
 
             List<BookStockRespUserDto> bookOrganizer = utilities.bookOrganizer(listStockBook);

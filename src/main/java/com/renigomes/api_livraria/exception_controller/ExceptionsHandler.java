@@ -1,9 +1,9 @@
 package com.renigomes.api_livraria.exception_controller;
 
-import com.renigomes.api_livraria.book.exception.BookException;
-import com.renigomes.api_livraria.config.ExceptionConfig;
-import com.renigomes.api_livraria.security.security_exception.TokenException;
-import com.renigomes.api_livraria.user.exceptions.UserException;
+import java.net.URI;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.net.URI;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.renigomes.api_livraria.book.exception.BookException;
+import com.renigomes.api_livraria.config.ExceptionConfig;
+import com.renigomes.api_livraria.security.security_exception.TokenException;
+import com.renigomes.api_livraria.user.exceptions.UserException;
 
 @RestControllerAdvice
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {

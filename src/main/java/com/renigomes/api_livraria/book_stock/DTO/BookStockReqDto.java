@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
  */
 @AllArgsConstructor
 @Getter
+@Setter
 public class BookStockReqDto implements Serializable {
     @NotNull
     private final BookReqDto book;

@@ -1,16 +1,16 @@
 package com.renigomes.api_livraria.book.util;
-import com.renigomes.api_livraria.book.dto.BookRespUserDto;
-import com.renigomes.api_livraria.book.exception.OutStockException;
-import com.renigomes.api_livraria.book.model.Book;
-import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
-import com.renigomes.api_livraria.book_stock.model.BookStock;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.renigomes.api_livraria.book.dto.BookRespUserDto;
+import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
+import com.renigomes.api_livraria.book_stock.model.BookStock;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
