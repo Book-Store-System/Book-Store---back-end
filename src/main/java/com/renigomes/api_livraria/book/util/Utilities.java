@@ -2,11 +2,12 @@ package com.renigomes.api_livraria.book.util;
 import java.math.BigDecimal;
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.renigomes.api_livraria.book.dto.BookRespUserDto;
+import com.renigomes.api_livraria.book.dto.BookRespDto;
 import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
 import com.renigomes.api_livraria.book_stock.model.BookStock;
 
@@ -37,9 +38,9 @@ public class Utilities {
             return bookStockList
                     .stream()
                     .map(bookStock -> {
-                        BookRespUserDto bookRespUserDto = modelMapper.map(bookStock.getBook(), BookRespUserDto.class);
+                        BookRespDto bookRespDto = modelMapper.map(bookStock.getBook(), BookRespDto.class);
                         BookStockRespUserDto bookStockRespUserDto = modelMapper.map(bookStock, BookStockRespUserDto.class);
-                        bookStockRespUserDto.setBook(bookRespUserDto);
+                        bookStockRespUserDto.setBook(bookRespDto);
                         bookStockRespUserDto.setSalePrice(calculateTotalPrice(bookStock));
                         return bookStockRespUserDto;
                     }).toList();

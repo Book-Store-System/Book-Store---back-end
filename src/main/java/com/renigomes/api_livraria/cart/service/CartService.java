@@ -1,32 +1,27 @@
 package com.renigomes.api_livraria.cart.service;
 
+import com.renigomes.api_livraria.cart.model.Cart;
 import com.renigomes.api_livraria.cart.repository.CartRepository;
 import com.renigomes.api_livraria.item_book.model.ItemBook;
 import com.renigomes.api_livraria.item_book.service.ItemBookService;
-import com.renigomes.api_livraria.user.model.User;
-import com.renigomes.api_livraria.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartService {
 
     @Autowired
-    private UserService userService;
+    private ItemBookService itemBookService;
 
     @Autowired
     private CartRepository cartRepository;
 
-    @Autowired
-    private ItemBookService itemBookService;
-
-    public List<ItemBook> getCartFullItemsByEmail(String email){
-         return itemBookService.getListItemBookByCart(
-                cartRepository.findCartByUser(
-                        (User) userService.findByEmailAuth(email)
-                ).orElse(null)
-        );
+    public List<ItemBook> getCartFullItemsByCartID(int cart_id){
+        Optional<Cart> cart = cartRepository.findById(cart_id);
+        return cart.map(value -> itemBookService.getListItemBookByCart(value)).orElse(null);
     }
+
 }

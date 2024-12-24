@@ -1,16 +1,15 @@
 package com.renigomes.api_livraria.book_stock.DTO;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-
-import com.renigomes.api_livraria.book.dto.BookRespUserDto;
-
+import com.renigomes.api_livraria.book.dto.BookRespDto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * DTO for {@link com.renigomes.api_livraria.book_stock.model.BookStock}
@@ -20,8 +19,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class BookStockRespUserDto implements Serializable {
-    @NotNull
-    private  BookRespUserDto book;
+    private BookRespDto book;
     @NotNull
     @Positive
     private  Long quantityInStock;

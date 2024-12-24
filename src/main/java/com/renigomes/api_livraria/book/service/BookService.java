@@ -29,10 +29,6 @@ public class BookService {
     @Autowired
     private Utilities utilities;
 
-    public Optional<Book> findById(Long id){
-        return bookRepository.findById(id);
-    }
-
     public  List<BookStockRespUserDto> findBook(String search){
         search = "%"+search+"%";
         List<Book> listBook = bookRepository.findByTitleOrAuthorOrGenre(search, search, search);
