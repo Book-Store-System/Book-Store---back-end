@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BookRespUserDto implements Serializable {
+public class BookRespDto implements Serializable {
     @NotBlank
     private  String title;
     @NotBlank
