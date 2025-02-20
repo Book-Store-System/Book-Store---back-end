@@ -32,7 +32,7 @@ public class SecurityPermission {
                     });
                     put(HttpMethod.POST, new String[]{
                             "/api/user/register/admin",
-                            "/api/book"
+                            "/api/book/**"
                     });
                     put(HttpMethod.PATCH, new String[]{
                             "/api/user/{id}/active_user"

@@ -55,4 +55,7 @@ public class CartController {
         );
     }
 
+    @PostMapping
+    public void createCart(){}
+
 }

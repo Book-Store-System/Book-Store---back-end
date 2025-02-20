@@ -1,5 +1,6 @@
 package com.renigomes.api_livraria.book_stock.DTO;
 
+import com.renigomes.api_livraria.book.dto.BookReqDto;
 import com.renigomes.api_livraria.book.dto.BookReqUSerDto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -18,7 +19,7 @@ import java.math.BigDecimal;
 @Setter
 public class BookStockReqDto implements Serializable {
     @NotNull
-    private final BookReqUSerDto book;
+    private final BookReqDto book;
     @NotNull
     @Positive
     private final Long quantityInStock;
