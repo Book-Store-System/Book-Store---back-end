@@ -42,5 +42,5 @@ public class BookRespDto implements Serializable {
     private  String dimensions;
     @NotNull
     @Positive
-    private  Integer barcode;
+    private String barcode;
 }
