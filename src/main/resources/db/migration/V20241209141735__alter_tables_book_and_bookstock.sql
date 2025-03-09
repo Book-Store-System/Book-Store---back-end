@@ -1,6 +1,4 @@
 
-ALTER TABLE book DROP COLUMN profit_margin;
-
 ALTER TABLE book ADD COLUMN publisher VARCHAR(255) NOT NULL;
 ALTER TABLE book ADD COLUMN publication_date DATE NOT NULL;
 ALTER TABLE book ADD COLUMN number_of_page INT NOT NULL;
