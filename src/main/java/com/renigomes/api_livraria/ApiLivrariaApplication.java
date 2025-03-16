@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ApiLivrariaApplication {
+public class  ApiLivrariaApplication {
 	public static void main(String[] args) {
 		Dotenv dotenv = Dotenv.load();
 		System.setProperty("HOST_DB", dotenv.get("HOST_DB"));

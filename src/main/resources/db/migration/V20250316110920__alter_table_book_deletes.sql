@@ -1,0 +1,1 @@
+ALTER TABLE book DROP COLUMN purchase_price, DROP COLUMN profitmargin;
