@@ -26,7 +26,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
     @Enumerated(EnumType.STRING)
-    @Column(name = "status_account")
+    @Column(name = "status_account", insertable = false)
     private Status status;
 
 
