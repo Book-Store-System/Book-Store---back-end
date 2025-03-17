@@ -1,11 +1,9 @@
 package com.renigomes.api_livraria.user.controller;
 
+import com.renigomes.api_livraria.DTO.RespIdDto;
 import com.renigomes.api_livraria.security.SecurityConfig;
 import com.renigomes.api_livraria.security.service.TokenService;
-import com.renigomes.api_livraria.user.DTO.ResponseToken;
-import com.renigomes.api_livraria.user.DTO.UserDto;
-import com.renigomes.api_livraria.user.DTO.UserReqDto;
-import com.renigomes.api_livraria.user.DTO.UserRespDto;
+import com.renigomes.api_livraria.user.DTO.*;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.exceptions.UserErrorException;
 import com.renigomes.api_livraria.user.model.User;
@@ -106,7 +104,18 @@ public class UserController {
         return ResponseEntity.ok(new ResponseToken(token));
     }
 
- 
+    @Operation(
+            summary = "Edit User",
+            method =  "Method to edit a user"
+    )
+
+    @PatchMapping("/edit_user/{id_user}")
+    public ResponseEntity<?> updateUser(@PathVariable long id_user, @RequestBody @Valid UserEditReqDTO userEditReqDTO){
+        if (userService.updateUser(id_user, userEditReqDTO))
+            return ResponseEntity.ok(new RespIdDto(id_user));
+        log.error("User not found !");
+        throw new UserErrorException("User not found !", HttpStatus.BAD_REQUEST);
+    }
     @Operation(
             summary = "Delete User",
             method = "Method to delete a user"
