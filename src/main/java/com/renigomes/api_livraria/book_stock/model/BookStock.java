@@ -28,5 +28,7 @@ public class BookStock {
     @Column(name = "purchase_price")
     private BigDecimal purchasePrice;
     private LocalDate lastPurchase;
+    @Column(name = "is_deleted", insertable = false)
+    private boolean isDeleted;
 
 }

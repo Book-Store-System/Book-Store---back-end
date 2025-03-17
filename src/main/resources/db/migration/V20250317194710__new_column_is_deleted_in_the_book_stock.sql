@@ -1,0 +1,1 @@
+ALTER TABLE book_stock ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
