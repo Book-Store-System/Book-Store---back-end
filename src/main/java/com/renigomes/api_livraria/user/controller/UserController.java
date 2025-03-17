@@ -105,30 +105,6 @@ public class UserController {
     }
 
     @Operation(
-            summary = "Edit User",
-            method =  "Method to edit a user"
-    )
-
-    @PatchMapping("/edit_user/{id_user}")
-    public ResponseEntity<?> updateUser(@PathVariable long id_user, @RequestBody @Valid UserEditReqDTO userEditReqDTO){
-        if (userService.updateUser(id_user, userEditReqDTO))
-            return ResponseEntity.ok(new RespIdDto(id_user));
-        log.error("User not found !");
-        throw new UserErrorException("User not found !", HttpStatus.BAD_REQUEST);
-    }
-    @Operation(
-            summary = "Delete User",
-            method = "Method to delete a user"
-    )
-    @DeleteMapping
-    public ResponseEntity<Void> deleteUser(HttpServletRequest request){
-        if (userService.deactivateUser(request) != null)
-            return ResponseEntity.noContent().build();
-        log.error("error performing operation");
-        throw new UserErrorException("error performing operation", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @Operation(
             summary = "Active user",
             description = "Method to activate user"
     )
@@ -140,8 +116,42 @@ public class UserController {
         throw new UserErrorException("error performing operation", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-   
+    @Operation(
+            summary = "Edit User",
+            method =  "Method to edit a user"
+    )
+    @PatchMapping("/edit_user/{id_user}")
+    public ResponseEntity<?> updateUser(@PathVariable long id_user, @RequestBody @Valid UserEditReqDTO userEditReqDTO){
+        if (userService.updateUser(id_user, userEditReqDTO))
+            return ResponseEntity.ok(new RespIdDto(id_user));
+        log.error("User not found !");
+        throw new UserErrorException("User not found !", HttpStatus.BAD_REQUEST);
+    }
 
+    @Operation(
+            summary = "Change password",
+            method = "Method to change password"
+    )
+    @PutMapping("/edit_user/{id_user}/password")
+    public ResponseEntity<?> changeUserPassword(@PathVariable long id_user,
+                                                @RequestBody @Valid PasswordEditReqDto passwordEditReqDto){
+       if(userService.updateUserPassword(id_user, passwordEditReqDto))
+           return ResponseEntity.ok(new RespIdDto(id_user));
+       log.error("User not found !");
+       throw new UserErrorException("User not found !", HttpStatus.BAD_REQUEST);
+    }
+
+    @Operation(
+            summary = "Delete User",
+            method = "Method to delete a user"
+    )
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUser(HttpServletRequest request){
+        if (userService.deactivateUser(request) != null)
+            return ResponseEntity.noContent().build();
+        log.error("error performing operation");
+        throw new UserErrorException("error performing operation", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 
 }
