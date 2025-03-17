@@ -1,5 +1,6 @@
 package com.renigomes.api_livraria.user.service;
 
+import com.renigomes.api_livraria.user.DTO.UserEditReqDTO;
 import com.renigomes.api_livraria.user.DTO.UserRespDto;
 import com.renigomes.api_livraria.user.enums.Status;
 import com.renigomes.api_livraria.user.exceptions.UserNotFoundException;
@@ -9,6 +10,7 @@ import com.renigomes.api_livraria.user.util.Utilites;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -57,5 +59,18 @@ public class UserService {
         }
         log.error("User not found !");
         throw new UserNotFoundException("User not found !", HttpStatus.BAD_REQUEST);
+    }
+
+    @Transactional
+    public boolean updateUser(long id_user, UserEditReqDTO userEditReqDTO){
+        User userOld = userRepository.findById(id_user).orElse(null);
+        if (userOld != null){
+            BeanUtils.copyProperties(userEditReqDTO, userOld);
+            userRepository.save(userOld);
+            return userOld.getEmail().equals(userEditReqDTO.getEmail()) &&
+                    userOld.getName().equals(userEditReqDTO.getName()) &&
+                    userOld.getSurname().equals(userEditReqDTO.getSurname());
+        }
+        return false;
     }
 }
