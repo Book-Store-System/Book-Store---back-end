@@ -8,6 +8,7 @@ import com.renigomes.api_livraria.book.util.Utilities;
 import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
 import com.renigomes.api_livraria.book_stock.model.BookStock;
 import com.renigomes.api_livraria.book_stock.repository.BookStockRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,5 +46,16 @@ public class BookService {
         }
         log.error("Book not found!");
         throw new NotFoundException("Book not found!", HttpStatus.BAD_REQUEST);
+    }
+
+    @Transactional
+    public BookStock deleteBookStock(long id){
+        BookStock bookStock = bookStockRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Book not found!");
+                    return new NotFoundException("Book not found!", HttpStatus.NOT_FOUND);
+                });
+        bookStock.setDeleted(true);
+        return bookStockRepository.save(bookStock);
     }
 }
