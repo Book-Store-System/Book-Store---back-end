@@ -5,6 +5,7 @@ import com.renigomes.api_livraria.security.SecurityConfig;
 import com.renigomes.api_livraria.security.service.TokenService;
 import com.renigomes.api_livraria.user.DTO.*;
 import com.renigomes.api_livraria.user.enums.Role;
+import com.renigomes.api_livraria.user.enums.Status;
 import com.renigomes.api_livraria.user.exceptions.UserErrorException;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.service.UserService;
@@ -23,6 +24,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("api/user")
@@ -59,7 +62,7 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<?> findByEmail(@RequestParam String email){
         User user = (User) userService.findByEmailAuth(email);
-        if (user == null)
+        if (user == null || !Objects.equals(user.getStatus().getValue(), Status.ACTIVE.getValue()))
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(modelMapper.map(user, UserRespDto.class));
     }
@@ -155,9 +158,20 @@ public class UserController {
             summary = "Delete User",
             method = "Method to delete a user"
     )
-    @DeleteMapping
+    @DeleteMapping("/delete_user")
     public ResponseEntity<Void> deleteUser(HttpServletRequest request){
         if (userService.deactivateUser(request) != null)
+            return ResponseEntity.noContent().build();
+        perfomingErrorLog();
+        throw new UserErrorException(ERROR_PERFORMING_OPERATION, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @Operation(
+            summary = "Delete User Administrador",
+            method = "Method to delete a user"
+    )
+    @DeleteMapping("/delete_user/{id}/admin")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id){
+        if (userService.deactivateUserAdmin(id) != null)
             return ResponseEntity.noContent().build();
         perfomingErrorLog();
         throw new UserErrorException(ERROR_PERFORMING_OPERATION, HttpStatus.INTERNAL_SERVER_ERROR);
