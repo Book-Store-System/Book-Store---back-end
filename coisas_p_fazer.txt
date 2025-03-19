@@ -1,2 +1,0 @@
-1 - Terminar o delete de book stock
-2 - Refazer os parâmetros dos puts em users ficar do mesmo jeito do delete
