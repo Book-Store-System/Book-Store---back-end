@@ -1,11 +1,10 @@
 package com.renigomes.api_livraria.book_stock.service;
 
 import com.renigomes.api_livraria.DTO.RespIdDto;
+import com.renigomes.api_livraria.book.component.BookComponent;
 import com.renigomes.api_livraria.book.exception.NotFoundException;
-import com.renigomes.api_livraria.book.exception.OutStockException;
 import com.renigomes.api_livraria.book.model.Book;
 import com.renigomes.api_livraria.book.repository.BookRepository;
-import com.renigomes.api_livraria.book.component.BookComponent;
 import com.renigomes.api_livraria.book_stock.DTO.BookStockReqDto;
 import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
 import com.renigomes.api_livraria.book_stock.exception.UniqueTitleError;
@@ -13,10 +12,12 @@ import com.renigomes.api_livraria.book_stock.model.BookStock;
 import com.renigomes.api_livraria.book_stock.repository.BookStockRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import java.util.List;
 @Slf4j
 public class BookStockService {
 
+    private static final String BOOK_OUT_OF_STOCK = "Book out of stock!";
     @Autowired
     private BookComponent bookComponent;
 
@@ -35,6 +37,11 @@ public class BookStockService {
 
     @Autowired
     private BookStockRepository bookStockRepository;
+
+    private static NotFoundException get() {
+        log.error(BOOK_OUT_OF_STOCK);
+        return new NotFoundException(BOOK_OUT_OF_STOCK, HttpStatus.NOT_FOUND);
+    }
 
     @Transactional
     public RespIdDto save(BookStockReqDto bookStockReqDto){
@@ -56,16 +63,25 @@ public class BookStockService {
                 .stream().filter(i -> !i.isDeleted()).toList();
         List<BookStockRespUserDto> bookOrganizer = bookComponent.bookOrganizer(books);
         if (bookOrganizer != null) return bookOrganizer;
-        log.error("Book out of stock!");
-        throw new OutStockException("Book out of stock!", HttpStatus.BAD_REQUEST);
+        throw get();
+    }
+
+    @Transactional
+    public BookStock updateBookStock(BookStockReqDto bookStockReqDto, long id_book_stock){
+       BookStock bookStock = bookStockRepository.findById(id_book_stock).orElseThrow(
+               BookStockService::get
+       );
+        BeanUtils.copyProperties(bookStockReqDto.getBook(), bookStock.getBook());
+        BeanUtils.copyProperties(bookStockReqDto, bookStock);
+        bookStock = bookStockRepository.save(bookStock);
+        return bookStock;
     }
 
     public BookStock activeBookStock(long id){
         BookStock bookStock = bookStockRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Book not found!");
-                    return new NotFoundException("Book not found!", HttpStatus.NOT_FOUND);
-                });
+                .orElseThrow(
+                    BookStockService::get
+                );
         bookStock.setDeleted(false);
         return bookStockRepository.save(bookStock);
     }
@@ -73,10 +89,7 @@ public class BookStockService {
     @Transactional
     public BookStock deleteBookStock(long id){
         BookStock bookStock = bookStockRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Book not found!");
-                    return new NotFoundException("Book not found!", HttpStatus.NOT_FOUND);
-                });
+                .orElseThrow(BookStockService::get);
         bookStock.setDeleted(true);
         return bookStockRepository.save(bookStock);
     }

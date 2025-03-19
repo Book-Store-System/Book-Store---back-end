@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class UserController {
 
+    public static final String ERROR_PERFORMING_OPERATION = "error performing operation";
+    public static final String UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED = "Unexpected error. User data not changed !";
     @Autowired
     private UserService userService;
 
@@ -45,6 +47,10 @@ public class UserController {
 
     @Autowired
     private TokenService tokenService;
+
+    private static void perfomingErrorLog() {
+        log.error(ERROR_PERFORMING_OPERATION);
+    }
 
     @Operation(
             summary = "Find user",
@@ -112,9 +118,11 @@ public class UserController {
     public ResponseEntity<Void> activeUser(@PathVariable long id){
         if (userService.activeUser(id) != null)
             return ResponseEntity.noContent().build();
-        log.error("error performing operation");
-        throw new UserErrorException("error performing operation", HttpStatus.INTERNAL_SERVER_ERROR);
+        perfomingErrorLog();
+        throw new UserErrorException(ERROR_PERFORMING_OPERATION, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+   
 
     @Operation(
             summary = "Edit User",
@@ -124,8 +132,8 @@ public class UserController {
     public ResponseEntity<?> updateUser(HttpServletRequest request, @RequestBody @Valid UserEditReqDTO userEditReqDTO){
         if (userService.updateUser(request, userEditReqDTO))
             return ResponseEntity.ok(new RespIdDto(userService.extractUserByToker(request).getId()));
-        log.error("Unexpected error. User data not changed !");
-        throw new UserErrorException("Unexpected error. User data not changed !", HttpStatus.INTERNAL_SERVER_ERROR);
+        log.error(UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED);
+        throw new UserErrorException(UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Operation(
@@ -151,8 +159,8 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(HttpServletRequest request){
         if (userService.deactivateUser(request) != null)
             return ResponseEntity.noContent().build();
-        log.error("error performing operation");
-        throw new UserErrorException("error performing operation", HttpStatus.INTERNAL_SERVER_ERROR);
+        perfomingErrorLog();
+        throw new UserErrorException(ERROR_PERFORMING_OPERATION, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 

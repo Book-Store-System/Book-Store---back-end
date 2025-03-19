@@ -11,8 +11,8 @@ import lombok.Setter;
 @Entity(name = "book")
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
