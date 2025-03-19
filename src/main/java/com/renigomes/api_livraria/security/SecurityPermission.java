@@ -39,7 +39,8 @@ public class SecurityPermission {
                             "/api/book/activate/{id_book_stock}"
                     });
                     put(HttpMethod.DELETE, new String[]{
-                            "/api/book/delete_book/{id_book_stock}"
+                            "/api/book/delete_book/{id_book_stock}",
+                            "/api/user/delete_user/{id}/admin"
                     });
                 }
             });

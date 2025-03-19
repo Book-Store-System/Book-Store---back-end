@@ -9,7 +9,6 @@ import com.renigomes.api_livraria.user.exceptions.UserErrorException;
 import com.renigomes.api_livraria.user.exceptions.UserNotFoundException;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.repository.UserRepository;
-import com.renigomes.api_livraria.user.service.recordsService.GetOldUser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +52,13 @@ public class UserService {
     @Transactional
     public UserDetails deactivateUser(HttpServletRequest request){
        User user = extractUserByToker(request);
+       user.setStatus(Status.INACTIVE);
+       return userRepository.save(user);
+    }
+
+    @Transactional
+    public UserDetails deactivateUserAdmin(long id_user){
+       User user = userRepository.findById(id_user).get();
        user.setStatus(Status.INACTIVE);
        return userRepository.save(user);
     }
