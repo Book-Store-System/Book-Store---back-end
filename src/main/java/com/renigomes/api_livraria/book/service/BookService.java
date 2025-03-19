@@ -48,14 +48,5 @@ public class BookService {
         throw new NotFoundException("Book not found!", HttpStatus.BAD_REQUEST);
     }
 
-    @Transactional
-    public BookStock deleteBookStock(long id){
-        BookStock bookStock = bookStockRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Book not found!");
-                    return new NotFoundException("Book not found!", HttpStatus.NOT_FOUND);
-                });
-        bookStock.setDeleted(true);
-        return bookStockRepository.save(bookStock);
-    }
+
 }

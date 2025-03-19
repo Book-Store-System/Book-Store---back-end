@@ -69,17 +69,9 @@ public class UserService {
         throw new UserNotFoundException("User not found !", HttpStatus.BAD_REQUEST);
     }
 
-    private GetOldUser getUserOld(long id){
-        User userOld = userRepository.findById(id).orElse(null);
-        return userOld!=null ?
-                new GetOldUser(userOld, false):
-                new GetOldUser(null, true);
-    }
-
     @Transactional
-    public boolean updateUser(long id_user, UserEditReqDTO userEditReqDTO){
-        if (getUserOld(id_user).isNull()) return false;
-        User userOld = getUserOld(id_user).oldUser();
+    public boolean updateUser(HttpServletRequest request, UserEditReqDTO userEditReqDTO){
+        User userOld = extractUserByToker(request);
         BeanUtils.copyProperties(userEditReqDTO, userOld);
         userRepository.save(userOld);
         return userOld.getEmail().equals(userEditReqDTO.getEmail()) &&
@@ -88,9 +80,8 @@ public class UserService {
     }
 
     @Transactional
-    public boolean updateUserPassword(long id_user, @Valid PasswordEditReqDto passwordEditReqDto){
-        if (getUserOld(id_user).isNull()) return false;
-        User userOld = getUserOld(id_user).oldUser();
+    public boolean updateUserPassword(HttpServletRequest request, @Valid PasswordEditReqDto passwordEditReqDto){
+        User userOld = extractUserByToker(request);
         if (passwordEditReqDto.newPassword().equals(passwordEditReqDto.repeatNewPassword())){
             userOld.setPassword(passwordEncoder.encode(passwordEditReqDto.newPassword()));
             userOld = userRepository.save(userOld);
@@ -100,7 +91,7 @@ public class UserService {
         throw new UserErrorException("Passwords do not match !", HttpStatus.BAD_REQUEST);
     }
 
-    private User extractUserByToker(HttpServletRequest request){
+    public User extractUserByToker(HttpServletRequest request){
         String authHeader = request.getHeader("Authorization");
         String token = authHeader == null ? null :
                 authHeader.replace("Bearer ", "");
