@@ -35,10 +35,11 @@ public class SecurityPermission {
                             "/api/book/**"
                     });
                     put(HttpMethod.PATCH, new String[]{
-                            "/api/user/{id}/active_user"
+                            "/api/user/{id}/active_user",
+                            "/api/book/activate/{id}"
                     });
                     put(HttpMethod.DELETE, new String[]{
-                            "/delete_book/{id_book_stock}"
+                            "/api/book/delete_book/{id}"
                     });
                 }
             });

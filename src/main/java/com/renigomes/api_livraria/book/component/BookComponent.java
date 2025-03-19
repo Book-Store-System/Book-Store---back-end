@@ -1,21 +1,17 @@
-package com.renigomes.api_livraria.book.util;
-import java.math.BigDecimal;
-import java.util.List;
-
-import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+package com.renigomes.api_livraria.book.component;
 
 import com.renigomes.api_livraria.book.dto.BookRespDto;
 import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
 import com.renigomes.api_livraria.book_stock.model.BookStock;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Component
-@Slf4j
-public class Utilities {
+public class BookComponent {
 
     @Autowired
     private ModelMapper modelMapper;

@@ -5,7 +5,7 @@ import com.renigomes.api_livraria.book.exception.NotFoundException;
 import com.renigomes.api_livraria.book.exception.OutStockException;
 import com.renigomes.api_livraria.book.model.Book;
 import com.renigomes.api_livraria.book.repository.BookRepository;
-import com.renigomes.api_livraria.book.util.Utilities;
+import com.renigomes.api_livraria.book.component.BookComponent;
 import com.renigomes.api_livraria.book_stock.DTO.BookStockReqDto;
 import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
 import com.renigomes.api_livraria.book_stock.exception.UniqueTitleError;
@@ -19,14 +19,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
 public class BookStockService {
 
     @Autowired
-    private Utilities utilities;
+    private BookComponent bookComponent;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -55,7 +54,7 @@ public class BookStockService {
     public List<BookStockRespUserDto> findAllBooks(){
         List<BookStock> books = bookStockRepository.findAll()
                 .stream().filter(i -> !i.isDeleted()).toList();
-        List<BookStockRespUserDto> bookOrganizer = utilities.bookOrganizer(books);
+        List<BookStockRespUserDto> bookOrganizer = bookComponent.bookOrganizer(books);
         if (bookOrganizer != null) return bookOrganizer;
         log.error("Book out of stock!");
         throw new OutStockException("Book out of stock!", HttpStatus.BAD_REQUEST);
