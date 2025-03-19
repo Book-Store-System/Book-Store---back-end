@@ -120,25 +120,27 @@ public class UserController {
             summary = "Edit User",
             method =  "Method to edit a user"
     )
-    @PatchMapping("/edit_user/{id_user}")
-    public ResponseEntity<?> updateUser(@PathVariable long id_user, @RequestBody @Valid UserEditReqDTO userEditReqDTO){
-        if (userService.updateUser(id_user, userEditReqDTO))
-            return ResponseEntity.ok(new RespIdDto(id_user));
-        log.error("User not found !");
-        throw new UserErrorException("User not found !", HttpStatus.BAD_REQUEST);
+    @PatchMapping("/edit_user")
+    public ResponseEntity<?> updateUser(HttpServletRequest request, @RequestBody @Valid UserEditReqDTO userEditReqDTO){
+        if (userService.updateUser(request, userEditReqDTO))
+            return ResponseEntity.ok(new RespIdDto(userService.extractUserByToker(request).getId()));
+        log.error("Unexpected error. User data not changed !");
+        throw new UserErrorException("Unexpected error. User data not changed !", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Operation(
             summary = "Change password",
             method = "Method to change password"
     )
-    @PutMapping("/edit_user/{id_user}/password")
-    public ResponseEntity<?> changeUserPassword(@PathVariable long id_user,
+    @PutMapping("/edit_user/password")
+    public ResponseEntity<?> changeUserPassword(HttpServletRequest request,
                                                 @RequestBody @Valid PasswordEditReqDto passwordEditReqDto){
-       if(userService.updateUserPassword(id_user, passwordEditReqDto))
-           return ResponseEntity.ok(new RespIdDto(id_user));
-       log.error("User not found !");
-       throw new UserErrorException("User not found !", HttpStatus.BAD_REQUEST);
+       if(userService.updateUserPassword(request, passwordEditReqDto)){
+           User user = userService.extractUserByToker(request);
+           return ResponseEntity.ok(new RespIdDto(user.getId()));
+       }
+       log.error("Unexpected error. Passwords don't match!");
+       throw new UserErrorException("Unexpected error. Passwords don't match!", HttpStatus.BAD_REQUEST);
     }
 
     @Operation(

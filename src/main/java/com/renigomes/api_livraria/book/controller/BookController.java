@@ -2,7 +2,11 @@ package com.renigomes.api_livraria.book.controller;
 
 import java.util.List;
 
+import com.renigomes.api_livraria.book.exception.BookDeleteError;
+import com.renigomes.api_livraria.book.exception.BookException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +22,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("api/book")
 @Tag(name = "book")
@@ -55,9 +60,28 @@ public class BookController {
         return ResponseEntity.ok(bookStockService.save(bookStockReqDto));
     }
 
-    @DeleteMapping("/delete_book/{id_book_stock}")
-    public ResponseEntity<Void> deleteBook(@PathVariable(name = "id_book_stock") long id){
-        return ResponseEntity.noContent().build();
+    @Operation(
+            summary = "Activate book",
+            description = "Activate book by id"
+    )
+    @PatchMapping("/activate/{id}")
+    public ResponseEntity<Void> activateBook(@PathVariable(name = "id") long id){
+        if (bookStockService.activeBookStock(id) != null)
+            return ResponseEntity.noContent().build();
+        log.error("Book stock could not be activated!");
+        throw new BookDeleteError("Book stock could not be deleted!", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Operation(
+            summary = "Delete book",
+            description = "Delete book by id"
+    )
+    @DeleteMapping("/delete_book/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable(name = "id") long id){
+        if (bookStockService.deleteBookStock(id) != null)
+            return ResponseEntity.noContent().build();
+        log.error("Book stock could not be deleted!");
+        throw new BookDeleteError("Book stock could not be deleted!", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 

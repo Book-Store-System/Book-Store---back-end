@@ -1,0 +1,1 @@
+ALTER TABLE book ADD CONSTRAINT unique_title UNIQUE (title);

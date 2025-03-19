@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;

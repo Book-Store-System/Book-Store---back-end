@@ -19,7 +19,7 @@ public class BookStock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @OneToOne
     private Book book;
     @Column(name = "qnt_stock")
     private Long quantityInStock;
@@ -27,7 +27,6 @@ public class BookStock {
     private double profitMargin;
     @Column(name = "purchase_price")
     private BigDecimal purchasePrice;
-    private LocalDate lastPurchase;
     @Column(name = "is_deleted", insertable = false)
     private boolean isDeleted;
 

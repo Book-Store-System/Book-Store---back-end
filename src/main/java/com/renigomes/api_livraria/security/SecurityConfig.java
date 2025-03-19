@@ -39,10 +39,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(SecurityPermission.SWAGGER_WHITELIST).permitAll()
                         .requestMatchers(HttpMethod.GET, SecurityPermission.API_PERMISSION_GET_ADMIN).hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, SecurityPermission.API_PERMISSION_PERMISSION_ALL_POST).permitAll()
-                        .requestMatchers(HttpMethod.GET, SecurityPermission.API_PERMISSION_PERMISSION_ALL_GET).permitAll()
                         .requestMatchers(HttpMethod.POST, SecurityPermission.API_PERMISSION_POST_ADMIN).hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, SecurityPermission.API_PERMISSION_PATCH_ADMIN).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, SecurityPermission.API_PERMISSION_DELETE_ADMIN).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, SecurityPermission.API_PERMISSION_PERMISSION_ALL_POST).permitAll()
+                        .requestMatchers(HttpMethod.GET, SecurityPermission.API_PERMISSION_PERMISSION_ALL_GET).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
