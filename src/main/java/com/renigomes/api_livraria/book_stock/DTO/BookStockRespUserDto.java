@@ -19,6 +19,9 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 public class BookStockRespUserDto implements Serializable {
+    @NotNull
+    private Long id;
+    @NotNull
     private BookRespDto book;
     @NotNull
     @Positive

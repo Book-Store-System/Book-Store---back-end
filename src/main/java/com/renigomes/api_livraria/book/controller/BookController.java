@@ -64,8 +64,8 @@ public class BookController {
             summary = "Activate book",
             description = "Activate book by id"
     )
-    @PatchMapping("/activate/{id}")
-    public ResponseEntity<Void> activateBook(@PathVariable(name = "id") long id){
+    @PatchMapping("/activate/{id_book_stock}")
+    public ResponseEntity<Void> activateBook(@PathVariable(name = "id_book_stock") long id){
         if (bookStockService.activeBookStock(id) != null)
             return ResponseEntity.noContent().build();
         log.error("Book stock could not be activated!");
@@ -73,11 +73,22 @@ public class BookController {
     }
 
     @Operation(
+            summary = "Update book",
+            description = "Method to update a book by id"
+    )
+    @PutMapping("/update_book/{id_book_stock}")
+    public ResponseEntity<RespIdDto> updateBook(@PathVariable(name = "id_book_stock") long id, @RequestBody @Valid BookStockReqDto bookStockReqDto) {
+        if (bookStockService.updateBookStock(bookStockReqDto, id) != null)
+            return ResponseEntity.ok(new RespIdDto(id));
+        log.error("Book stock could not be updated!");
+        throw new BookDeleteError("Book stock could not be updated!", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @Operation(
             summary = "Delete book",
             description = "Delete book by id"
     )
-    @DeleteMapping("/delete_book/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable(name = "id") long id){
+    @DeleteMapping("/delete_book/{id_book_stock}")
+    public ResponseEntity<Void> deleteBook(@PathVariable(name = "id_book_stock") long id){
         if (bookStockService.deleteBookStock(id) != null)
             return ResponseEntity.noContent().build();
         log.error("Book stock could not be deleted!");
