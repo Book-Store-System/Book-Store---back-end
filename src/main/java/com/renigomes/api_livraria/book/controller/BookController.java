@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.renigomes.api_livraria.book.exception.BookDeleteError;
 import com.renigomes.api_livraria.book.exception.BookException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,16 +41,16 @@ public class BookController {
             description = "Method to find all book stock"
     )
     @GetMapping
-    public ResponseEntity<List<BookStockRespUserDto>> getAllBookStock(){
-        return ResponseEntity.ok(bookStockService.findAllBooks());
+    public ResponseEntity<List<?>> getAllBookStock(HttpServletRequest request){
+        return ResponseEntity.ok(bookStockService.findAllBooks(request));
     }
     @Operation(
             summary = "Book search",
             description = "Performs search for books by author, title or genre"
     )
     @GetMapping("/search")
-    public ResponseEntity<List<BookStockRespUserDto>> findBySearch(@RequestParam String search) {
-        return ResponseEntity.ok(bookService.findBook(search));
+    public ResponseEntity<List<?>> findBySearch(@RequestParam String search, HttpServletRequest request) {
+        return ResponseEntity.ok(bookService.findBook(search, request));
     }
     @Operation(
             summary = "Create stock and book",
@@ -76,7 +77,7 @@ public class BookController {
             summary = "Update book",
             description = "Method to update a book by id"
     )
-    @PutMapping("/update_book/{id_book_stock}")
+    @PutMapping("/{id_book_stock}")
     public ResponseEntity<RespIdDto> updateBook(@PathVariable(name = "id_book_stock") long id, @RequestBody @Valid BookStockReqDto bookStockReqDto) {
         if (bookStockService.updateBookStock(bookStockReqDto, id) != null)
             return ResponseEntity.ok(new RespIdDto(id));
@@ -87,7 +88,7 @@ public class BookController {
             summary = "Delete book",
             description = "Delete book by id"
     )
-    @DeleteMapping("/delete_book/{id_book_stock}")
+    @DeleteMapping("/{id_book_stock}")
     public ResponseEntity<Void> deleteBook(@PathVariable(name = "id_book_stock") long id){
         if (bookStockService.deleteBookStock(id) != null)
             return ResponseEntity.noContent().build();

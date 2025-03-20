@@ -5,7 +5,6 @@ import com.renigomes.api_livraria.security.SecurityConfig;
 import com.renigomes.api_livraria.security.service.TokenService;
 import com.renigomes.api_livraria.user.DTO.*;
 import com.renigomes.api_livraria.user.enums.Role;
-import com.renigomes.api_livraria.user.enums.Status;
 import com.renigomes.api_livraria.user.exceptions.UserErrorException;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.service.UserService;
@@ -24,8 +23,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 @RestController
 @RequestMapping("api/user")
@@ -62,7 +59,7 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<?> findByEmail(@RequestParam String email){
         User user = (User) userService.findByEmailAuth(email);
-        if (user == null || !Objects.equals(user.getStatus().getValue(), Status.ACTIVE.getValue()))
+        if (user == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(modelMapper.map(user, UserRespDto.class));
     }
@@ -117,7 +114,7 @@ public class UserController {
             summary = "Active user",
             description = "Method to activate user"
     )
-    @PatchMapping("/{id}/active_user")
+    @PatchMapping("/active/{id}")
     public ResponseEntity<Void> activeUser(@PathVariable long id){
         if (userService.activeUser(id) != null)
             return ResponseEntity.noContent().build();
@@ -131,7 +128,7 @@ public class UserController {
             summary = "Edit User",
             method =  "Method to edit a user"
     )
-    @PatchMapping("/edit_user")
+    @PatchMapping
     public ResponseEntity<?> updateUser(HttpServletRequest request, @RequestBody @Valid UserEditReqDTO userEditReqDTO){
         if (userService.updateUser(request, userEditReqDTO))
             return ResponseEntity.ok(new RespIdDto(userService.extractUserByToker(request).getId()));
@@ -143,7 +140,7 @@ public class UserController {
             summary = "Change password",
             method = "Method to change password"
     )
-    @PutMapping("/edit_user/password")
+    @PutMapping("/password")
     public ResponseEntity<?> changeUserPassword(HttpServletRequest request,
                                                 @RequestBody @Valid PasswordEditReqDto passwordEditReqDto){
        if(userService.updateUserPassword(request, passwordEditReqDto)){
@@ -158,7 +155,7 @@ public class UserController {
             summary = "Delete User",
             method = "Method to delete a user"
     )
-    @DeleteMapping("/delete_user")
+    @DeleteMapping
     public ResponseEntity<Void> deleteUser(HttpServletRequest request){
         if (userService.deactivateUser(request) != null)
             return ResponseEntity.noContent().build();
@@ -169,7 +166,7 @@ public class UserController {
             summary = "Delete User Administrador",
             method = "Method to delete a user"
     )
-    @DeleteMapping("/delete_user/{id}/admin")
+    @DeleteMapping("/{id}/admin")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") long id){
         if (userService.deactivateUserAdmin(id) != null)
             return ResponseEntity.noContent().build();

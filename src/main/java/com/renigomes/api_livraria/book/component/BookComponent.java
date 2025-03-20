@@ -1,8 +1,11 @@
 package com.renigomes.api_livraria.book.component;
 
 import com.renigomes.api_livraria.book.dto.BookRespDto;
+import com.renigomes.api_livraria.book_stock.DTO.BookStockRespAdminDTO;
 import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
 import com.renigomes.api_livraria.book_stock.model.BookStock;
+import com.renigomes.api_livraria.user.enums.Role;
+import com.renigomes.api_livraria.user.model.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,17 +32,30 @@ public class BookComponent {
         );
     }
 
-    public List<BookStockRespUserDto> bookOrganizer(List<BookStock> bookStockList){
+    private BookStockRespAdminDTO getBookStockRespAdminDTO(BookStock bookStock){
+        BookRespDto bookRespDto = modelMapper.map(bookStock.getBook(), BookRespDto.class);
+        BookStockRespAdminDTO bookStockRespAdminDTO = modelMapper.map(bookStock, BookStockRespAdminDTO.class);
+        bookStockRespAdminDTO.setBook(bookRespDto);
+        bookStockRespAdminDTO.setSalePrice(calculateTotalPrice(bookStock));
+        return bookStockRespAdminDTO;
+    }
+
+    private BookStockRespUserDto getBookStockRespUserDTO(BookStock bookStock){
+        BookRespDto bookRespDto = modelMapper.map(bookStock.getBook(), BookRespDto.class);
+        BookStockRespUserDto bookStockRespUserDto = modelMapper.map(bookStock, BookStockRespUserDto.class);
+        bookStockRespUserDto.setBook(bookRespDto);
+        bookStockRespUserDto.setSalePrice(calculateTotalPrice(bookStock));
+        return bookStockRespUserDto;
+    }
+
+    public List<?> bookOrganizer(List<BookStock> bookStockList, User user){
         if (!bookStockList.isEmpty()) {
-            return bookStockList
+            return user.getRole() == Role.ADMIN ? bookStockList
                     .stream()
-                    .map(bookStock -> {
-                        BookRespDto bookRespDto = modelMapper.map(bookStock.getBook(), BookRespDto.class);
-                        BookStockRespUserDto bookStockRespUserDto = modelMapper.map(bookStock, BookStockRespUserDto.class);
-                        bookStockRespUserDto.setBook(bookRespDto);
-                        bookStockRespUserDto.setSalePrice(calculateTotalPrice(bookStock));
-                        return bookStockRespUserDto;
-                    }).toList();
+                    .map(this::getBookStockRespAdminDTO).toList():
+                    bookStockList
+                            .stream()
+                            .map(this::getBookStockRespUserDTO).toList();
         }
         return null;
     }

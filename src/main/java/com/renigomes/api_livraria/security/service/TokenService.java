@@ -19,6 +19,7 @@ import java.time.ZoneOffset;
 @Slf4j
 public class TokenService {
 
+    private static final String USER_NOT_FOUND = "User not found !";
     @Value("${api.secret.key}")
     private String secret;
     private Algorithm algorithm;
@@ -26,8 +27,8 @@ public class TokenService {
     public String generateToken(User user){
         try{
             if (!user.getStatus().getValue().equals(Status.ACTIVE.getValue())) {
-                log.error("Inactive user");
-                throw new TokenException("Inactive user", HttpStatus.BAD_REQUEST);
+                log.error(USER_NOT_FOUND);
+                throw new TokenException(USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
             }
             algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
