@@ -10,6 +10,10 @@ import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
 import com.renigomes.api_livraria.book_stock.exception.UniqueTitleError;
 import com.renigomes.api_livraria.book_stock.model.BookStock;
 import com.renigomes.api_livraria.book_stock.repository.BookStockRepository;
+import com.renigomes.api_livraria.user.enums.Role;
+import com.renigomes.api_livraria.user.model.User;
+import com.renigomes.api_livraria.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -38,6 +42,9 @@ public class BookStockService {
     @Autowired
     private BookStockRepository bookStockRepository;
 
+    @Autowired
+    private UserService userService;
+
     private static NotFoundException get() {
         log.error(BOOK_OUT_OF_STOCK);
         return new NotFoundException(BOOK_OUT_OF_STOCK, HttpStatus.NOT_FOUND);
@@ -58,10 +65,15 @@ public class BookStockService {
           );
     }
 
-    public List<BookStockRespUserDto> findAllBooks(){
-        List<BookStock> books = bookStockRepository.findAll()
-                .stream().filter(i -> !i.isDeleted()).toList();
-        List<BookStockRespUserDto> bookOrganizer = bookComponent.bookOrganizer(books);
+    public List<?> findAllBooks(HttpServletRequest request){
+        List<BookStock> books;
+        User user = userService.extractUserByToker(request);
+        if (user.getRole() == Role.ADMIN) books = bookStockRepository.findAll();
+        else books = bookStockRepository.findAll()
+                .stream()
+                .filter(i -> !i.isDeleted())
+                .toList();;
+        List<?> bookOrganizer = bookComponent.bookOrganizer(books, user);
         if (bookOrganizer != null) return bookOrganizer;
         throw get();
     }

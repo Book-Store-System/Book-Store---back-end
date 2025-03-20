@@ -26,6 +26,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class UserService {
+    private static final String USER_NOT_FOUND = "User not found !";
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -70,8 +71,8 @@ public class UserService {
             user.get().setStatus(Status.ACTIVE);
             return userRepository.save(user.get());
         }
-        log.error("User not found !");
-        throw new UserNotFoundException("User not found !", HttpStatus.BAD_REQUEST);
+        log.error(USER_NOT_FOUND);
+        throw new UserNotFoundException(USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
 
     @Transactional
