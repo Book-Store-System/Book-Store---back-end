@@ -5,9 +5,8 @@ import com.renigomes.api_livraria.book.exception.OutStockException;
 import com.renigomes.api_livraria.book.model.Book;
 import com.renigomes.api_livraria.book.repository.BookRepository;
 import com.renigomes.api_livraria.book.component.BookComponent;
-import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
-import com.renigomes.api_livraria.book_stock.model.BookStock;
-import com.renigomes.api_livraria.book_stock.repository.BookStockRepository;
+import com.renigomes.api_livraria.book.model.BookStock;
+import com.renigomes.api_livraria.book.repository.BookStockRepository;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.service.UserService;
@@ -16,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

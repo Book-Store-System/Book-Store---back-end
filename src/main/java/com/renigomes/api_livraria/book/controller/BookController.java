@@ -3,7 +3,6 @@ package com.renigomes.api_livraria.book.controller;
 import java.util.List;
 
 import com.renigomes.api_livraria.book.exception.BookDeleteError;
-import com.renigomes.api_livraria.book.exception.BookException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.renigomes.api_livraria.DTO.RespIdDto;
 import com.renigomes.api_livraria.book.service.BookService;
-import com.renigomes.api_livraria.book_stock.DTO.BookStockReqDto;
-import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
-import com.renigomes.api_livraria.book_stock.service.BookStockService;
+import com.renigomes.api_livraria.book.dto.BookStockReqDto;
+import com.renigomes.api_livraria.book.service.BookStockService;
 import com.renigomes.api_livraria.security.SecurityConfig;
 
 import io.swagger.v3.oas.annotations.Operation;

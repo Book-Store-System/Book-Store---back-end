@@ -1,7 +1,6 @@
-package com.renigomes.api_livraria.book_stock.DTO;
+package com.renigomes.api_livraria.book.dto;
 
-import com.renigomes.api_livraria.book.dto.BookReqDto;
-import com.renigomes.api_livraria.book.dto.BookReqUSerDto;
+import com.renigomes.api_livraria.book.model.BookStock;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * DTO for {@link com.renigomes.api_livraria.book_stock.model.BookStock}
+ * DTO for {@link BookStock}
  */
 @AllArgsConstructor
 @Getter
