@@ -1,7 +1,7 @@
-package com.renigomes.api_livraria.item_book.DTO;
+package com.renigomes.api_livraria.cart.DTO;
 
 import com.renigomes.api_livraria.book.dto.BookRespUserDTO;
-import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
+import com.renigomes.api_livraria.cart.model.ItemCart;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * DTO for {@link com.renigomes.api_livraria.item_book.model.ItemBook}
+ * DTO for {@link ItemCart}
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class ItemBookRespDto implements Serializable {
+public class ItemCartRespDto implements Serializable {
     private  BookRespUserDTO book;
     private  Integer quantity;
     private BigDecimal totalPrice;

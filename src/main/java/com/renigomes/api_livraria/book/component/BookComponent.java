@@ -1,9 +1,9 @@
 package com.renigomes.api_livraria.book.component;
 
 import com.renigomes.api_livraria.book.dto.BookRespDto;
-import com.renigomes.api_livraria.book_stock.DTO.BookStockRespAdminDTO;
-import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
-import com.renigomes.api_livraria.book_stock.model.BookStock;
+import com.renigomes.api_livraria.book.dto.BookStockRespAdminDTO;
+import com.renigomes.api_livraria.book.dto.BookStockRespUserDto;
+import com.renigomes.api_livraria.book.model.BookStock;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
 import org.modelmapper.ModelMapper;

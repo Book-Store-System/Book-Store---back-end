@@ -1,17 +1,16 @@
-package com.renigomes.api_livraria.item_book.model;
+package com.renigomes.api_livraria.cart.model;
 
-import com.renigomes.api_livraria.book_stock.model.BookStock;
-import com.renigomes.api_livraria.cart.model.Cart;
+import com.renigomes.api_livraria.book.model.BookStock;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "item_book")
+@Entity(name = "item_cart")
 @NoArgsConstructor
 @Getter
 @Setter
-public class ItemBook {
+public class ItemCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -20,5 +19,7 @@ public class ItemBook {
     @ManyToOne
     private Cart cart;
     private Integer quantity;
+    @Column
+    private Boolean isDeleted;
 
 }
