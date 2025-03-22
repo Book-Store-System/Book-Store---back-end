@@ -1,4 +1,4 @@
-package com.renigomes.api_livraria.item_book.DTO;
+package com.renigomes.api_livraria.cart.DTO;
 
 import com.renigomes.api_livraria.book.dto.BookReqUSerDto;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ItemBookReqDto {
+public class ItemCartReqDto {
     private BookReqUSerDto book;
     private  Integer quantity;
     private BigDecimal totalPrice;

@@ -1,15 +1,14 @@
-package com.renigomes.api_livraria.book_stock.service;
+package com.renigomes.api_livraria.book.service;
 
 import com.renigomes.api_livraria.DTO.RespIdDto;
 import com.renigomes.api_livraria.book.component.BookComponent;
 import com.renigomes.api_livraria.book.exception.NotFoundException;
 import com.renigomes.api_livraria.book.model.Book;
 import com.renigomes.api_livraria.book.repository.BookRepository;
-import com.renigomes.api_livraria.book_stock.DTO.BookStockReqDto;
-import com.renigomes.api_livraria.book_stock.DTO.BookStockRespUserDto;
-import com.renigomes.api_livraria.book_stock.exception.UniqueTitleError;
-import com.renigomes.api_livraria.book_stock.model.BookStock;
-import com.renigomes.api_livraria.book_stock.repository.BookStockRepository;
+import com.renigomes.api_livraria.book.dto.BookStockReqDto;
+import com.renigomes.api_livraria.book.exception.UniqueTitleError;
+import com.renigomes.api_livraria.book.model.BookStock;
+import com.renigomes.api_livraria.book.repository.BookStockRepository;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.service.UserService;

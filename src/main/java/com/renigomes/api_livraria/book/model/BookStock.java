@@ -1,6 +1,5 @@
-package com.renigomes.api_livraria.book_stock.model;
+package com.renigomes.api_livraria.book.model;
 
-import com.renigomes.api_livraria.book.model.Book;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

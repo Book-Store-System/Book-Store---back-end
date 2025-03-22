@@ -2,8 +2,8 @@ package com.renigomes.api_livraria.cart.controller;
 
 import com.renigomes.api_livraria.book.dto.BookRespUserDTO;
 import com.renigomes.api_livraria.cart.service.CartService;
-import com.renigomes.api_livraria.item_book.DTO.ItemBookRespDto;
-import com.renigomes.api_livraria.item_book.model.ItemBook;
+import com.renigomes.api_livraria.cart.DTO.ItemCartRespDto;
+import com.renigomes.api_livraria.cart.model.ItemCart;
 import com.renigomes.api_livraria.security.SecurityConfig;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -35,14 +35,14 @@ public class CartController {
             description = "Method to get full items into the cart"
     )
     @GetMapping("{id}/items_cart")
-    public ResponseEntity<List<ItemBookRespDto>> getCartItemsFull(@PathVariable("id") int id_cart){
-        List<ItemBook> itemBooks = cartService.getCartFullItemsByCartID(id_cart);
+    public ResponseEntity<List<ItemCartRespDto>> getCartItemsFull(@PathVariable("id") int id_cart){
+        List<ItemCart> itemBooks = cartService.getCartFullItemsByCartID(id_cart);
         return ResponseEntity.ok(
                 itemBooks.stream()
                         .map(item -> {
-                            ItemBookRespDto itemBookRespDto = modelMapper.map(item, ItemBookRespDto.class);
-                            itemBookRespDto.setBook(modelMapper.map(item.getBookStock().getBook(), BookRespUserDTO.class));
-                            itemBookRespDto.setTotalPrice(
+                            ItemCartRespDto itemCartRespDto = modelMapper.map(item, ItemCartRespDto.class);
+                            itemCartRespDto.setBook(modelMapper.map(item.getBookStock().getBook(), BookRespUserDTO.class));
+                            itemCartRespDto.setTotalPrice(
                                     BigDecimal.valueOf(item.getQuantity())
                                             .multiply(item.getBookStock().getPurchasePrice().add(
                                                     item.getBookStock().getPurchasePrice()
@@ -50,7 +50,7 @@ public class CartController {
                                                             item.getBookStock().getProfitMargin()
                                                     ))))
                             );
-                            return  itemBookRespDto;
+                            return itemCartRespDto;
                         }).toList()
         );
     }
