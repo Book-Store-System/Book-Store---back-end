@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.renigomes.api_livraria.address.exceptions.AddressException;
 import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -55,6 +56,14 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
                 e.getMessage(),
                 "http://localhost:8080/book");
 
+    }
+
+    @ExceptionHandler(AddressException.class)
+    public ProblemDetail addressException(AddressException e){
+        return exceptionConfig.problemDetailConfig(
+                e.getHttpStatus(),
+                e.getMessage(),
+                "http://localhost:8080/error/address");
     }
 
     @ExceptionHandler(TokenException.class)

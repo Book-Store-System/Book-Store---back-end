@@ -15,10 +15,12 @@ public class Address {
     private Long id;
     private String street;
     private String city;
+    private String state;
     private String neighborhood;
     private String CEP;
+    private Integer number;
     private String reference;
-    @Column(name = "address_default")
+    @Column(name = "address_default", insertable = false)
     private Boolean addressDefault;
     @ManyToOne
     private User user;

@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("api/book")
-@Tag(name = "book")
+@Tag(name = "Book")
 @SecurityRequirement(name = SecurityConfig.SECURITY)
 public class BookController {
 
