@@ -1,5 +1,6 @@
 package com.renigomes.api_livraria.address.model;
 
+import com.renigomes.api_livraria.user.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,5 +20,7 @@ public class Address {
     private String reference;
     @Column(name = "address_default")
     private Boolean addressDefault;
+    @ManyToOne
+    private User user;
 
 }
