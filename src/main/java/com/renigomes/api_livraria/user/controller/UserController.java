@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/user")
-@Tag(name="user")
 @SecurityRequirement(name= SecurityConfig.SECURITY)
 @Slf4j
 public class UserController {
@@ -54,7 +53,8 @@ public class UserController {
 
     @Operation(
             summary = "Find user",
-            description = "Method to find a user by email"
+            description = "Method to find a user by email",
+            tags = "User"
     )
     @GetMapping()
     public ResponseEntity<?> findByEmail(@RequestParam String email){
@@ -66,7 +66,8 @@ public class UserController {
 
     @Operation(
             summary = "User Registration",
-            description = "Method to register a regular user"
+            description = "Method to register a regular user",
+            tags = "Auth"
     )
     @PostMapping("/register")
     public ResponseEntity<?> createUserClient(@RequestBody @Valid UserReqDto userReqDto){
@@ -82,7 +83,8 @@ public class UserController {
     }
     @Operation(
             summary = "Admin User Registration",
-            description = "Method to register a administrator user"
+            description = "Method to register a administrator user",
+            tags = "Auth"
     )
     @PostMapping("/register/admin")
     public ResponseEntity<?> createUserAdmin(@RequestBody @Valid UserReqDto userReqDto){
@@ -98,7 +100,8 @@ public class UserController {
 
     @Operation(
             summary = "User Login",
-            description = "Method to login"
+            description = "Method to login",
+            tags = "Auth"
     )
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody @Valid UserDto userDto){
@@ -112,7 +115,8 @@ public class UserController {
 
     @Operation(
             summary = "Active user",
-            description = "Method to activate user"
+            description = "Method to activate user",
+            tags = "User"
     )
     @PatchMapping("/active/{id}")
     public ResponseEntity<Void> activeUser(@PathVariable long id){
@@ -126,7 +130,8 @@ public class UserController {
 
     @Operation(
             summary = "Edit User",
-            method =  "Method to edit a user"
+            method =  "Method to edit a user",
+            tags = "User"
     )
     @PatchMapping
     public ResponseEntity<?> updateUser(HttpServletRequest request, @RequestBody @Valid UserEditReqDTO userEditReqDTO){
@@ -138,7 +143,8 @@ public class UserController {
 
     @Operation(
             summary = "Change password",
-            method = "Method to change password"
+            method = "Method to change password",
+            tags = "User"
     )
     @PutMapping("/password")
     public ResponseEntity<?> changeUserPassword(HttpServletRequest request,
@@ -153,7 +159,8 @@ public class UserController {
 
     @Operation(
             summary = "Delete User",
-            method = "Method to delete a user"
+            method = "Method to delete a user",
+            tags = "User"
     )
     @DeleteMapping
     public ResponseEntity<Void> deleteUser(HttpServletRequest request){
@@ -164,7 +171,8 @@ public class UserController {
     }
     @Operation(
             summary = "Delete User Administrador",
-            method = "Method to delete a user"
+            method = "Method to delete a user",
+            tags = "User"
     )
     @DeleteMapping("/{id}/admin")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") long id){
