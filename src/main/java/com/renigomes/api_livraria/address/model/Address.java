@@ -23,6 +23,7 @@ public class Address {
     @Column(name = "address_default", insertable = false)
     private Boolean addressDefault;
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
 }
