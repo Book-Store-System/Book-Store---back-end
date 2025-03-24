@@ -17,9 +17,6 @@ public class PurchaseOrder {
     private Long id;
     @ManyToOne
     private User user;
-    @ManyToOne
-    @JoinColumn(name = "item_or_id")
-    private ItemOrder itemOrder;
     private String payment;
     private BigDecimal shipping;
 }

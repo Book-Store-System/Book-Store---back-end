@@ -16,6 +16,9 @@ public class ItemOrder {
     private Integer id;
     @ManyToOne
     private BookStock bookStock;
+    @ManyToOne
+    @JoinColumn(name="order_id")
+    private PurchaseOrder purchaseOrder;
     private Integer quantity;
     @Column
     private Boolean isDeleted;
