@@ -1,6 +1,5 @@
 package com.renigomes.api_livraria.purchase_order.model;
 
-import com.renigomes.api_livraria.cart.model.Cart;
 import com.renigomes.api_livraria.user.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,10 +17,9 @@ public class PurchaseOrder {
     private Long id;
     @ManyToOne
     private User user;
-    @OneToOne
-    private Cart cart;
+    @ManyToOne
+    @JoinColumn(name = "item_or_id")
+    private ItemOrder itemOrder;
     private String payment;
     private BigDecimal shipping;
-    @Column(name = "total_value")
-    private BigDecimal totalValue;
 }
