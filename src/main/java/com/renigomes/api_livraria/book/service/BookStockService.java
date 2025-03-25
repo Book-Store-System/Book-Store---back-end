@@ -2,6 +2,8 @@ package com.renigomes.api_livraria.book.service;
 
 import com.renigomes.api_livraria.DTO.RespIdDto;
 import com.renigomes.api_livraria.book.component.BookComponent;
+import com.renigomes.api_livraria.book.dto.BookRespDto;
+import com.renigomes.api_livraria.book.dto.BookStockRespUserDto;
 import com.renigomes.api_livraria.book.exception.NotFoundException;
 import com.renigomes.api_livraria.book.model.Book;
 import com.renigomes.api_livraria.book.repository.BookRepository;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -49,6 +52,15 @@ public class BookStockService {
         return new NotFoundException(BOOK_OUT_OF_STOCK, HttpStatus.NOT_FOUND);
     }
 
+    public  BookStock findBookByID(long id){
+        Optional<BookStock> bookStockOptional = bookStockRepository.findById(id);
+        if (bookStockOptional.isPresent()) {
+            return bookStockOptional.get();
+        }
+        log.error("Book not found!");
+        throw new NotFoundException("Book not found!", HttpStatus.BAD_REQUEST);
+    }
+
     @Transactional
     public RespIdDto save(BookStockReqDto bookStockReqDto){
         Book book = modelMapper.map(bookStockReqDto.getBook(), Book.class);
@@ -66,6 +78,8 @@ public class BookStockService {
 
     public List<?> findAllBooks(HttpServletRequest request){
         List<BookStock> books;
+        if (request.getUserPrincipal() == null)
+            return bookComponent.bookOrganizerAll(bookStockRepository.findAll());
         User user = userService.extractUserByToker(request);
         if (user.getRole() == Role.ADMIN) books = bookStockRepository.findAll();
         else books = bookStockRepository.findAll()

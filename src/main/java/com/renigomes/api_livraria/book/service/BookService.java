@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -34,11 +35,21 @@ public class BookService {
     @Autowired
     private BookComponent bookComponent;
 
+
+
     public  List<?> findBook(String search, HttpServletRequest request){
         search = "%"+search+"%";
         List<Book> listBook = bookRepository.findByTitleOrAuthorOrGenre(search, search, search);
         if (!listBook.isEmpty()){
             List<BookStock> listStockBook;
+            if (request.getUserPrincipal() == null){
+                listStockBook = listBook
+                        .stream()
+                        .map(book -> bookStockRepository.findByBook(book).get())
+                        .filter(bookStock -> !bookStock.isDeleted())
+                        .toList();
+                return bookComponent.bookOrganizerAll(listStockBook);
+            }
             User user = userService.extractUserByToker(request);
             if(user.getRole() == Role.ADMIN)
                 listStockBook = listBook

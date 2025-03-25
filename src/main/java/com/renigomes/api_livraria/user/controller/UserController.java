@@ -10,7 +10,6 @@ import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +28,6 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name= SecurityConfig.SECURITY)
 @Slf4j
 public class UserController {
-
-    public static final String ERROR_PERFORMING_OPERATION = "error performing operation";
     public static final String UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED = "Unexpected error. User data not changed !";
     @Autowired
     private UserService userService;
@@ -46,10 +43,6 @@ public class UserController {
 
     @Autowired
     private TokenService tokenService;
-
-    private static void perfomingErrorLog() {
-        log.error(ERROR_PERFORMING_OPERATION);
-    }
 
     @Operation(
             summary = "Find user",
@@ -113,19 +106,6 @@ public class UserController {
         return ResponseEntity.ok(new ResponseToken(token));
     }
 
-    @Operation(
-            summary = "Active user",
-            description = "Method to activate user",
-            tags = "User"
-    )
-    @PatchMapping("/active/{id}")
-    public ResponseEntity<Void> activeUser(@PathVariable long id){
-        if (userService.activeUser(id) != null)
-            return ResponseEntity.noContent().build();
-        perfomingErrorLog();
-        throw new UserErrorException(ERROR_PERFORMING_OPERATION, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
    
 
     @Operation(
@@ -164,22 +144,8 @@ public class UserController {
     )
     @DeleteMapping
     public ResponseEntity<Void> deleteUser(HttpServletRequest request){
-        if (userService.deactivateUser(request) != null)
-            return ResponseEntity.noContent().build();
-        perfomingErrorLog();
-        throw new UserErrorException(ERROR_PERFORMING_OPERATION, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-    @Operation(
-            summary = "Delete User Administrador",
-            method = "Method to delete a user",
-            tags = "User"
-    )
-    @DeleteMapping("/{id}/admin")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id){
-        if (userService.deactivateUserAdmin(id) != null)
-            return ResponseEntity.noContent().build();
-        perfomingErrorLog();
-        throw new UserErrorException(ERROR_PERFORMING_OPERATION, HttpStatus.INTERNAL_SERVER_ERROR);
+        userService.deleteUser(request);
+        return ResponseEntity.noContent().build();
     }
 
 

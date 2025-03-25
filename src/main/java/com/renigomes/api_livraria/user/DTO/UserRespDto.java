@@ -1,7 +1,6 @@
 package com.renigomes.api_livraria.user.DTO;
 
 import com.renigomes.api_livraria.user.enums.Role;
-import com.renigomes.api_livraria.user.enums.Status;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +21,4 @@ public class UserRespDto {
     private String surname;
     @NotNull
     private Role role;
-    @NotNull
-    private Status status;
 }

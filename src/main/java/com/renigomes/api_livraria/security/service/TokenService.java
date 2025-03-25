@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.renigomes.api_livraria.security.security_exception.TokenException;
-import com.renigomes.api_livraria.user.enums.Status;
 import com.renigomes.api_livraria.user.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,10 +25,6 @@ public class TokenService {
 
     public String generateToken(User user){
         try{
-            if (!user.getStatus().getValue().equals(Status.ACTIVE.getValue())) {
-                log.error(USER_NOT_FOUND);
-                throw new TokenException(USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
-            }
             algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("auth-user")

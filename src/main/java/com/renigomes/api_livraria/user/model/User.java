@@ -1,7 +1,8 @@
 package com.renigomes.api_livraria.user.model;
 
+import com.renigomes.api_livraria.address.model.Address;
+import com.renigomes.api_livraria.purchase_order.model.PurchaseOrder;
 import com.renigomes.api_livraria.user.enums.Role;
-import com.renigomes.api_livraria.user.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,9 +26,11 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status_account", insertable = false)
-    private Status status;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PurchaseOrder> purchaseOrders;
+
 
 
     @Override

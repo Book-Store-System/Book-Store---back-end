@@ -1,10 +1,19 @@
 package com.renigomes.api_livraria.book.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import com.renigomes.api_livraria.book.component.BookComponent;
+import com.renigomes.api_livraria.book.dto.BookStockRespAdminDTO;
+import com.renigomes.api_livraria.book.dto.BookStockRespUserDto;
 import com.renigomes.api_livraria.book.exception.BookDeleteError;
+import com.renigomes.api_livraria.book.model.BookStock;
+import com.renigomes.api_livraria.user.enums.Role;
+import com.renigomes.api_livraria.user.model.User;
+import com.renigomes.api_livraria.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +36,35 @@ import jakarta.validation.Valid;
 @Tag(name = "Book")
 @SecurityRequirement(name = SecurityConfig.SECURITY)
 public class BookController {
-
     @Autowired
     private BookService bookService;
-
     @Autowired
     private BookStockService bookStockService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
+    private BookComponent bookComponent;
+
+    @Operation(
+            summary = "Find book by id",
+            description = "Method to find book by id"
+    )
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findByid(@PathVariable long id, HttpServletRequest request) {
+        User user = userService.extractUserByToker(request);
+        BookStock bookStock = bookStockService.findBookByID(id);
+        BigDecimal totalPrice = bookComponent.calculateTotalPrice(bookStock);
+        if (user.getRole() == Role.ADMIN){
+            BookStockRespAdminDTO bookStockRespAdminDTO = modelMapper.map(bookStock, BookStockRespAdminDTO.class);
+            bookStockRespAdminDTO.setSalePrice(totalPrice);
+            return ResponseEntity.ok(modelMapper.map(bookStock, BookStockRespAdminDTO.class));
+        }
+        BookStockRespUserDto bookStockRespUserDto = modelMapper.map(bookStock, BookStockRespUserDto.class);
+        bookStockRespUserDto.setSalePrice(totalPrice);
+        return ResponseEntity.ok(bookStockRespUserDto);
+    }
 
     @Operation(
             summary = "Find all book stock",
@@ -63,8 +95,8 @@ public class BookController {
             summary = "Activate book",
             description = "Activate book by id"
     )
-    @PatchMapping("/activate/{id_book_stock}")
-    public ResponseEntity<Void> activateBook(@PathVariable(name = "id_book_stock") long id){
+    @PatchMapping("/activate/{id}")
+    public ResponseEntity<Void> activateBook(@PathVariable(name = "id") long id){
         if (bookStockService.activeBookStock(id) != null)
             return ResponseEntity.noContent().build();
         log.error("Book stock could not be activated!");
@@ -75,8 +107,8 @@ public class BookController {
             summary = "Update book",
             description = "Method to update a book by id"
     )
-    @PutMapping("/{id_book_stock}")
-    public ResponseEntity<RespIdDto> updateBook(@PathVariable(name = "id_book_stock") long id, @RequestBody @Valid BookStockReqDto bookStockReqDto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<RespIdDto> updateBook(@PathVariable(name = "id") long id, @RequestBody @Valid BookStockReqDto bookStockReqDto) {
         if (bookStockService.updateBookStock(bookStockReqDto, id) != null)
             return ResponseEntity.ok(new RespIdDto(id));
         log.error("Book stock could not be updated!");
@@ -86,8 +118,8 @@ public class BookController {
             summary = "Delete book",
             description = "Delete book by id"
     )
-    @DeleteMapping("/{id_book_stock}")
-    public ResponseEntity<Void> deleteBook(@PathVariable(name = "id_book_stock") long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable(name = "id") long id){
         if (bookStockService.deleteBookStock(id) != null)
             return ResponseEntity.noContent().build();
         log.error("Book stock could not be deleted!");
