@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @Entity(name = "item_order")
 @NoArgsConstructor
@@ -20,7 +22,5 @@ public class ItemOrder {
     @JoinColumn(name="order_id")
     private PurchaseOrder purchaseOrder;
     private Integer quantity;
-    @Column
-    private Boolean isDeleted;
 
 }

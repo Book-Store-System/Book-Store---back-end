@@ -20,7 +20,7 @@ public class BookComponent {
     private ModelMapper modelMapper;
 
 
-    private BigDecimal calculateTotalPrice(BookStock bookStock){
+    public BigDecimal calculateTotalPrice(BookStock bookStock){
         return bookStock.getPurchasePrice().add(
                 bookStock.getPurchasePrice()
                         .multiply(
@@ -54,6 +54,14 @@ public class BookComponent {
                     .stream()
                     .map(this::getBookStockRespAdminDTO).toList():
                     bookStockList
+                            .stream()
+                            .map(this::getBookStockRespUserDTO).toList();
+        }
+        return null;
+    }
+    public List<BookStockRespUserDto> bookOrganizerAll(List<BookStock> bookStockList){
+        if (!bookStockList.isEmpty()) {
+            return bookStockList
                             .stream()
                             .map(this::getBookStockRespUserDTO).toList();
         }

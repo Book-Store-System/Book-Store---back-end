@@ -4,6 +4,8 @@ import com.renigomes.api_livraria.user.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @Entity(name = "address")
 @Getter
@@ -22,7 +24,7 @@ public class Address {
     private String reference;
     @Column(name = "address_default", insertable = false)
     private Boolean addressDefault;
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity(name = "purchase_order")
 @Getter
@@ -19,4 +20,8 @@ public class PurchaseOrder {
     private User user;
     private String payment;
     private BigDecimal shipping;
+
+    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemOrder> itemOrders;
+
 }

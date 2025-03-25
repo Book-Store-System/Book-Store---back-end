@@ -22,7 +22,6 @@ public class SecurityPermission {
 
     public static final String ADMIN = "ADMIN";
     public static final String PERMIT_ALL = "PERMIT_ALL";
-    @SuppressWarnings({"rawtypes", "unchecked" })
     private static final Map<String, Map<HttpMethod, String []>> API_WHITELIST = new HashMap() {
         {
             put(ADMIN, new HashMap<HttpMethod, String []>(){
@@ -35,19 +34,18 @@ public class SecurityPermission {
                             "/api/book/**"
                     });
                     put(HttpMethod.PATCH, new String[]{
-                            "/api/user/{id}/active_user",
-                            "/api/book/activate/{id_book_stock}"
+                            "/api/book/activate/{id}"
                     });
                     put(HttpMethod.DELETE, new String[]{
-                            "/api/book/delete_book/{id_book_stock}",
-                            "/api/user/delete_user/{id}/admin"
+                            "/api/book/{id}",
                     });
                 }
             });
             put(PERMIT_ALL, new HashMap<HttpMethod, String []>(){
                 {
                     put(HttpMethod.GET, new String []{
-                            "/api/book/**"
+                            "/api/book",
+                            "/api/book/search"
                     });
                     put(HttpMethod.POST, new String[]{
                             "/api/user/register",
