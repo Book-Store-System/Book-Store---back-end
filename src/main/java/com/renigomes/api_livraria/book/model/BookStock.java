@@ -1,12 +1,10 @@
 package com.renigomes.api_livraria.book.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity(name = "book_stock")
 @Getter

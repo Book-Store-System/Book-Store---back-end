@@ -18,7 +18,6 @@ import java.time.ZoneOffset;
 @Slf4j
 public class TokenService {
 
-    private static final String USER_NOT_FOUND = "User not found !";
     @Value("${api.secret.key}")
     private String secret;
     private Algorithm algorithm;

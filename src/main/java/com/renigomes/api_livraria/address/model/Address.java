@@ -22,7 +22,7 @@ public class Address {
     private String CEP;
     private Integer number;
     private String reference;
-    @Column(name = "address_default", insertable = false)
+    @Column(name = "address_default")
     private Boolean addressDefault;
     @ManyToOne()
     @JoinColumn(name = "user_id")
