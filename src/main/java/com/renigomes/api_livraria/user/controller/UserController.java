@@ -131,7 +131,7 @@ public class UserController {
     }
 
     @Operation(
-            summary = "Delete User",
+            summary = "Delete User. Attention: This action is irreversible",
             method = "Method to delete a user",
             tags = "User"
     )

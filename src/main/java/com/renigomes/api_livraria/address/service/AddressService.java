@@ -42,6 +42,12 @@ public class AddressService {
         return new AddressNotFound(ADDRESS_NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
 
+    public AddressRespDto findAddressDefault(HttpServletRequest request){
+        User user = userService.extractUserByToker(request);
+        Address address = addressRepository.findAddressDefaultByUserId(user.getId());
+        return modelMapper.map(address, AddressRespDto.class);
+    }
+
     public List<AddressRespDto> getAddressById(HttpServletRequest request) {
         User user = userService.extractUserByToker(request);
         List<Address> addresses = addressRepository.findByUserId(user.getId());
