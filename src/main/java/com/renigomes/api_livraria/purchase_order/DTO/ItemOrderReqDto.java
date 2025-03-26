@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class ItemOrderReqDto {
     @NotNull
-    private Integer bookStockId;
+    private Long bookStockId;
     @NotNull
     private  Integer quantity;
 }

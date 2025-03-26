@@ -6,6 +6,7 @@ import com.renigomes.api_livraria.book.dto.BookStockRespUserDto;
 import com.renigomes.api_livraria.book.model.BookStock;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,11 +15,10 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Component
+@AllArgsConstructor
 public class BookComponent {
 
-    @Autowired
     private ModelMapper modelMapper;
-
 
     public BigDecimal calculateTotalPrice(BookStock bookStock){
         return bookStock.getPurchasePrice().add(
