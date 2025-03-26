@@ -9,10 +9,10 @@ import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,15 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class UserService {
-    private static final String USER_NOT_FOUND = "User not found !";
-    @Autowired
+
     private UserRepository userRepository;
-    @Autowired
     private ModelMapper modelMapper;
-    @Autowired
     private TokenService tokenService;
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public UserDetails findByEmailAuth(String email){

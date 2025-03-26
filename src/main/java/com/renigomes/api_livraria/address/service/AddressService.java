@@ -1,7 +1,6 @@
 package com.renigomes.api_livraria.address.service;
 
 import com.renigomes.api_livraria.DTO.RespIdDto;
-import com.renigomes.api_livraria.address.DTO.AddressReqDefault;
 import com.renigomes.api_livraria.address.DTO.AddressReqDto;
 import com.renigomes.api_livraria.address.DTO.AddressRespDto;
 import com.renigomes.api_livraria.address.exceptions.AddressException;
@@ -13,10 +12,10 @@ import com.renigomes.api_livraria.address.repository.AddressRepository;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,15 +24,11 @@ import java.util.List;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class AddressService {
 
-    @Autowired
     private AddressRepository addressRepository;
-
-    @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
     private UserService userService;
 
     public static final String ADDRESS_NOT_FOUND = "Address not found !";
@@ -46,7 +41,6 @@ public class AddressService {
         log.error(ADDRESS_NOT_FOUND);
         return new AddressNotFound(ADDRESS_NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
-
 
     public List<AddressRespDto> getAddressById(HttpServletRequest request) {
         User user = userService.extractUserByToker(request);
@@ -67,6 +61,7 @@ public class AddressService {
         User user = userService.extractUserByToker(request);
         Address addressSaved = modelMapper.map(addressReqDto, Address.class);
         addressSaved.setUser(user);
+        addressSaved.setAddressDefault(addressRepository.countAddressByUserId(user.getId()) == 0);
         addressSaved = addressRepository.save(addressSaved);
         return new RespIdDto(addressSaved.getId());
     }
@@ -93,11 +88,18 @@ public class AddressService {
     }
 
     @Transactional
-    public Address updateAddressDefault(long id, AddressReqDefault addressReqDefault) {
+    public Address updateAddressDefault(long id) {
+      addressRepository.findAll()
+                .forEach(
+                        (address) -> {
+                            address.setAddressDefault(false);
+                            addressRepository.save(address);
+                        }
+                );
         Address address = addressRepository.findById(id).orElseThrow(
                 AddressService::getLogErrorNotFound
         );
-        address.setAddressDefault(addressReqDefault.addressDefault());
+        address.setAddressDefault(true);
         address = addressRepository.save(address);
         return address;
     }

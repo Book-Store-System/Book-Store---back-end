@@ -12,6 +12,7 @@ import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,16 +36,13 @@ import jakarta.validation.Valid;
 @RequestMapping("api/book")
 @Tag(name = "Book")
 @SecurityRequirement(name = SecurityConfig.SECURITY)
+@AllArgsConstructor
 public class BookController {
-    @Autowired
+
     private BookService bookService;
-    @Autowired
     private BookStockService bookStockService;
-    @Autowired
     private UserService userService;
-    @Autowired
     private ModelMapper modelMapper;
-    @Autowired
     private BookComponent bookComponent;
 
     @Operation(

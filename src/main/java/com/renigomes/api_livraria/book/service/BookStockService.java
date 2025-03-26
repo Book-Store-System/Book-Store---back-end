@@ -15,6 +15,7 @@ import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -29,22 +30,14 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class BookStockService {
 
     private static final String BOOK_OUT_OF_STOCK = "Book out of stock!";
-    @Autowired
     private BookComponent bookComponent;
-
-    @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
     private BookRepository bookRepository;
-
-    @Autowired
     private BookStockRepository bookStockRepository;
-
-    @Autowired
     private UserService userService;
 
     private static NotFoundException get() {
