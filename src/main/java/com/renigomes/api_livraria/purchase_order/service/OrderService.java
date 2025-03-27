@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -31,6 +33,7 @@ public class OrderService {
         User user = userService.extractUserByToker(request);
         PurchaseOrder purOrder = modelMapper.map(orderReqDTO, PurchaseOrder.class);
         purOrder.setUser(user);
+        purOrder.setOrderDate(LocalDate.now());
         purOrder = purOrderRepository.save(purOrder);
         PurchaseOrder finalPurOrder = purOrder;
         orderReqDTO.getItems()
