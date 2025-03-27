@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -52,7 +53,7 @@ public class OrderService {
         return purOrderRepository.save(purchaseOrder);
     }
 
-    public PurchaseOrder findOrderByUser(User user) {
+    public List<PurchaseOrder> findOrderByUser(User user) {
         return purOrderRepository.findByUser(user);
     }
 }

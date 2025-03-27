@@ -14,6 +14,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
@@ -30,7 +33,6 @@ public class UserService {
 
     private UserRepository userRepository;
     private ModelMapper modelMapper;
-    private TokenService tokenService;
     private PasswordEncoder passwordEncoder;
     private final OrderService orderService;
     private final UserComponent userComponent;
@@ -52,9 +54,11 @@ public class UserService {
     @Transactional
     public void deleteUser(HttpServletRequest request){
        User user = userComponent.extractUserByToker(request);
-        PurchaseOrder purchaseOrder = orderService.findOrderByUser(user);
-        purchaseOrder.setUser(null);
-        orderService.save(purchaseOrder);
+        List<PurchaseOrder> purchaseOrder = orderService.findOrderByUser(user);
+        purchaseOrder.forEach(order -> {
+            order.setUser(null);
+            orderService.save(order);
+        });
        userRepository.delete(user);
     }
 
@@ -80,13 +84,4 @@ public class UserService {
         log.error("Passwords don't match!");
         throw new UserErrorException("Passwords do not match !", HttpStatus.BAD_REQUEST);
     }
-
-//    public User extractUserByToker(HttpServletRequest request){
-//        String authHeader = request.getHeader("Authorization");
-//        String token = authHeader == null ? null :
-//                authHeader.replace("Bearer ", "");
-//        String suject = tokenService.valueDateToken(token);
-//        return (User) userRepository.findByEmail(suject);
-//
-//    }
 }
