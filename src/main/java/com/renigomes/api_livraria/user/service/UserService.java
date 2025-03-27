@@ -2,7 +2,6 @@ package com.renigomes.api_livraria.user.service;
 
 import com.renigomes.api_livraria.purchase_order.model.PurchaseOrder;
 import com.renigomes.api_livraria.purchase_order.service.OrderService;
-import com.renigomes.api_livraria.security.service.TokenService;
 import com.renigomes.api_livraria.user.DTO.PasswordEditReqDto;
 import com.renigomes.api_livraria.user.DTO.UserEditReqDTO;
 import com.renigomes.api_livraria.user.DTO.UserRespDto;
@@ -19,7 +18,6 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,7 +52,7 @@ public class UserService {
     @Transactional
     public void deleteUser(HttpServletRequest request){
        User user = userComponent.extractUserByToker(request);
-        List<PurchaseOrder> purchaseOrder = orderService.findOrderByUser(user);
+        List<PurchaseOrder> purchaseOrder = orderService.findByUser(user);
         purchaseOrder.forEach(order -> {
             order.setUser(null);
             orderService.save(order);
