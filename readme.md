@@ -22,13 +22,14 @@
          {
             {
               "title": "string",
-              "image": "string"
+              "picture": "string"
             },
             "quantity": 0,
             "subtotalIem": 0  
           },
         ],
         "shipping": 0,
+        "order_date": "string",
         "totalValue": 0
     }
     ```
