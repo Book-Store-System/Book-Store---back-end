@@ -1,0 +1,1 @@
+ALTER TABLE purchase_order ADD COLUMN order_date DATE NOT NULL;

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.renigomes.api_livraria.address.exceptions.AddressException;
+import com.renigomes.api_livraria.purchase_order.exceptions.OrderException;
 import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -54,7 +55,7 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     public ProblemDetail bookException(BookException e){
         return exceptionConfig.problemDetailConfig(e.getHttpStatus(),
                 e.getMessage(),
-                "http://localhost:8080/book");
+                "http://localhost:8080/error/book");
 
     }
 
@@ -78,6 +79,15 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
                 e.getHttpStatus(),
                 e.getMessage(),
                 "http://localhost:8080/error/user"
+        );
+    }
+
+    @ExceptionHandler(OrderException.class)
+    public ProblemDetail orderException(OrderException e){
+        return exceptionConfig.problemDetailConfig(
+                e.getHttpStatus(),
+                e.getMessage(),
+                "http://localhost:8080/error/order"
         );
     }
 

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity(name = "purchase_order")
@@ -20,7 +21,8 @@ public class PurchaseOrder {
     private User user;
     private String payment;
     private BigDecimal shipping;
-
+    @Column(name = "order_date")
+    private LocalDate orderDate;
     @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemOrder> itemOrders;
 
