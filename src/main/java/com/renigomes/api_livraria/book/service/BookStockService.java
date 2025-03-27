@@ -11,6 +11,7 @@ import com.renigomes.api_livraria.book.dto.BookStockReqDto;
 import com.renigomes.api_livraria.book.exception.UniqueTitleError;
 import com.renigomes.api_livraria.book.model.BookStock;
 import com.renigomes.api_livraria.book.repository.BookStockRepository;
+import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.service.UserService;
@@ -38,7 +39,7 @@ public class BookStockService {
     private ModelMapper modelMapper;
     private BookRepository bookRepository;
     private BookStockRepository bookStockRepository;
-    private UserService userService;
+    private UserComponent userComponent;
 
     private static NotFoundException get() {
         log.error(BOOK_OUT_OF_STOCK);
@@ -73,7 +74,7 @@ public class BookStockService {
         List<BookStock> books;
         if (request.getUserPrincipal() == null)
             return bookComponent.bookOrganizerAll(bookStockRepository.findAll());
-        User user = userService.extractUserByToker(request);
+        User user = userComponent.extractUserByToker(request);
         if (user.getRole() == Role.ADMIN) books = bookStockRepository.findAll();
         else books = bookStockRepository.findAll()
                 .stream()

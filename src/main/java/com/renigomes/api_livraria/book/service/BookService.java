@@ -1,24 +1,22 @@
 package com.renigomes.api_livraria.book.service;
 
+import com.renigomes.api_livraria.book.component.BookComponent;
 import com.renigomes.api_livraria.book.exception.NotFoundException;
 import com.renigomes.api_livraria.book.exception.OutStockException;
 import com.renigomes.api_livraria.book.model.Book;
-import com.renigomes.api_livraria.book.repository.BookRepository;
-import com.renigomes.api_livraria.book.component.BookComponent;
 import com.renigomes.api_livraria.book.model.BookStock;
+import com.renigomes.api_livraria.book.repository.BookRepository;
 import com.renigomes.api_livraria.book.repository.BookStockRepository;
+import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
-import com.renigomes.api_livraria.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -27,7 +25,7 @@ public class BookService {
 
     private BookRepository bookRepository;
     private BookStockRepository bookStockRepository;
-    private UserService userService;
+    private UserComponent userComponent;
     private BookComponent bookComponent;
 
     public  List<?> findBook(String search, HttpServletRequest request){
@@ -43,7 +41,7 @@ public class BookService {
                         .toList();
                 return bookComponent.bookOrganizerAll(listStockBook);
             }
-            User user = userService.extractUserByToker(request);
+            User user = userComponent.extractUserByToker(request);
             if(user.getRole() == Role.ADMIN)
                 listStockBook = listBook
                     .stream()

@@ -6,6 +6,7 @@ import com.renigomes.api_livraria.purchase_order.DTO.OrderReqDTO;
 import com.renigomes.api_livraria.purchase_order.exceptions.ItemOrderException;
 import com.renigomes.api_livraria.purchase_order.model.PurchaseOrder;
 import com.renigomes.api_livraria.purchase_order.repository.PurOrderRepository;
+import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,12 +26,12 @@ public class OrderService {
 
     private final ModelMapper modelMapper;
     private PurOrderRepository purOrderRepository;
-    private UserService userService;
+    private UserComponent userComponent;
     private ItemOrderService itemOrderService;
 
     @Transactional
     public RespIdDto createOrder(OrderReqDTO orderReqDTO, HttpServletRequest request) {
-        User user = userService.extractUserByToker(request);
+        User user = userComponent.extractUserByToker(request);
         PurchaseOrder purOrder = modelMapper.map(orderReqDTO, PurchaseOrder.class);
         purOrder.setUser(user);
         purOrder.setOrderDate(LocalDate.now());
