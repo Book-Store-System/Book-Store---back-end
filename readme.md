@@ -19,12 +19,14 @@
     ```shell
     {
         [
-          {
-            "title": "string",
-            "image": "string"
+         {
+            {
+              "title": "string",
+              "image": "string"
+            },
+            "quantity": 0,
+            "subtotalIem": 0  
           },
-          "quantity": 0,
-          "subtotalIem": 0  
         ],
         "shipping": 0,
         "totalValue": 0
