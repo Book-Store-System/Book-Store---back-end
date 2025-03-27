@@ -1,5 +1,7 @@
 package com.renigomes.api_livraria.user.service;
 
+import com.renigomes.api_livraria.purchase_order.model.PurchaseOrder;
+import com.renigomes.api_livraria.purchase_order.service.OrderService;
 import com.renigomes.api_livraria.security.service.TokenService;
 import com.renigomes.api_livraria.user.DTO.PasswordEditReqDto;
 import com.renigomes.api_livraria.user.DTO.UserEditReqDTO;
@@ -28,6 +30,7 @@ public class UserService {
     private ModelMapper modelMapper;
     private TokenService tokenService;
     private PasswordEncoder passwordEncoder;
+    private final OrderService orderService;
 
     public UserDetails findByEmailAuth(String email){
         return userRepository.findByEmail(email);
@@ -46,6 +49,9 @@ public class UserService {
     @Transactional
     public void deleteUser(HttpServletRequest request){
        User user = extractUserByToker(request);
+        PurchaseOrder purchaseOrder = orderService.findOrderByUser(user);
+        purchaseOrder.setUser(null);
+        orderService.save(purchaseOrder);
        userRepository.delete(user);
     }
 

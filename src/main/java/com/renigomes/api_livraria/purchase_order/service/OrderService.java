@@ -45,4 +45,13 @@ public class OrderService {
                 });
         return new RespIdDto(finalPurOrder.getId());
     }
+
+    @Transactional
+    public PurchaseOrder save(PurchaseOrder purchaseOrder) {
+        return purOrderRepository.save(purchaseOrder);
+    }
+
+    public PurchaseOrder findOrderByUser(User user) {
+        return purOrderRepository.findByUser(user);
+    }
 }
