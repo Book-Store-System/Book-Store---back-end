@@ -9,6 +9,7 @@ import com.renigomes.api_livraria.address.exceptions.AddressUpdateError;
 import com.renigomes.api_livraria.address.exceptions.UserHasNoAddressException;
 import com.renigomes.api_livraria.address.model.Address;
 import com.renigomes.api_livraria.address.repository.AddressRepository;
+import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +30,7 @@ public class AddressService {
 
     private AddressRepository addressRepository;
     private ModelMapper modelMapper;
-    private UserService userService;
+    private UserComponent userComponent;
 
     public static final String ADDRESS_NOT_FOUND = "Address not found !";
     public static final String ADDRESS_COULD_NOT_BE_UPDATED = "Address could not be updated";
@@ -43,13 +44,13 @@ public class AddressService {
     }
 
     public AddressRespDto findAddressDefault(HttpServletRequest request){
-        User user = userService.extractUserByToker(request);
+        User user = userComponent.extractUserByToker(request);
         Address address = addressRepository.findAddressDefaultByUserId(user.getId());
         return modelMapper.map(address, AddressRespDto.class);
     }
 
     public List<AddressRespDto> getAddressById(HttpServletRequest request) {
-        User user = userService.extractUserByToker(request);
+        User user = userComponent.extractUserByToker(request);
         List<Address> addresses = addressRepository.findByUserId(user.getId());
         if (addresses.isEmpty()) {
             log.error(THIS_USER_HAS_NO_ADDRESS);
@@ -64,7 +65,7 @@ public class AddressService {
 
     @Transactional
     public RespIdDto createAddress(HttpServletRequest request, AddressReqDto addressReqDto) {
-        User user = userService.extractUserByToker(request);
+        User user = userComponent.extractUserByToker(request);
         Address addressSaved = modelMapper.map(addressReqDto, Address.class);
         addressSaved.setUser(user);
         addressSaved.setAddressDefault(addressRepository.countAddressByUserId(user.getId()) == 0);

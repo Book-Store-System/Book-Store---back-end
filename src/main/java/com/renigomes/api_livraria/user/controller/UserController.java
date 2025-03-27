@@ -4,6 +4,7 @@ import com.renigomes.api_livraria.DTO.RespIdDto;
 import com.renigomes.api_livraria.security.SecurityConfig;
 import com.renigomes.api_livraria.security.service.TokenService;
 import com.renigomes.api_livraria.user.DTO.*;
+import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.exceptions.UserErrorException;
 import com.renigomes.api_livraria.user.model.User;
@@ -32,6 +33,7 @@ public class UserController {
     public static final String UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED = "Unexpected error. User data not changed !";
 
     private UserService userService;
+    private UserComponent userComponent;
     private ModelMapper modelMapper;
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
@@ -109,7 +111,7 @@ public class UserController {
     @PatchMapping
     public ResponseEntity<?> updateUser(HttpServletRequest request, @RequestBody @Valid UserEditReqDTO userEditReqDTO){
         if (userService.updateUser(request, userEditReqDTO))
-            return ResponseEntity.ok(new RespIdDto(userService.extractUserByToker(request).getId()));
+            return ResponseEntity.ok(new RespIdDto(userComponent.extractUserByToker(request).getId()));
         log.error(UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED);
         throw new UserErrorException(UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -123,7 +125,7 @@ public class UserController {
     public ResponseEntity<?> changeUserPassword(HttpServletRequest request,
                                                 @RequestBody @Valid PasswordEditReqDto passwordEditReqDto){
        if(userService.updateUserPassword(request, passwordEditReqDto)){
-           User user = userService.extractUserByToker(request);
+           User user = userComponent.extractUserByToker(request);
            return ResponseEntity.ok(new RespIdDto(user.getId()));
        }
        log.error("Unexpected error. Passwords don't match!");

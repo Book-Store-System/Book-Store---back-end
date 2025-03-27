@@ -1,9 +1,12 @@
 package com.renigomes.api_livraria.user.service;
 
+import com.renigomes.api_livraria.purchase_order.model.PurchaseOrder;
+import com.renigomes.api_livraria.purchase_order.service.OrderService;
 import com.renigomes.api_livraria.security.service.TokenService;
 import com.renigomes.api_livraria.user.DTO.PasswordEditReqDto;
 import com.renigomes.api_livraria.user.DTO.UserEditReqDTO;
 import com.renigomes.api_livraria.user.DTO.UserRespDto;
+import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.exceptions.UserErrorException;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.repository.UserRepository;
@@ -13,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +32,8 @@ public class UserService {
     private ModelMapper modelMapper;
     private TokenService tokenService;
     private PasswordEncoder passwordEncoder;
+    private final OrderService orderService;
+    private final UserComponent userComponent;
 
     public UserDetails findByEmailAuth(String email){
         return userRepository.findByEmail(email);
@@ -45,14 +51,17 @@ public class UserService {
 
     @Transactional
     public void deleteUser(HttpServletRequest request){
-       User user = extractUserByToker(request);
+       User user = userComponent.extractUserByToker(request);
+        PurchaseOrder purchaseOrder = orderService.findOrderByUser(user);
+        purchaseOrder.setUser(null);
+        orderService.save(purchaseOrder);
        userRepository.delete(user);
     }
 
 
     @Transactional
     public boolean updateUser(HttpServletRequest request, UserEditReqDTO userEditReqDTO){
-        User userOld = extractUserByToker(request);
+        User userOld = userComponent.extractUserByToker(request);
         BeanUtils.copyProperties(userEditReqDTO, userOld);
         userRepository.save(userOld);
         return userOld.getEmail().equals(userEditReqDTO.getEmail()) &&
@@ -62,7 +71,7 @@ public class UserService {
 
     @Transactional
     public boolean updateUserPassword(HttpServletRequest request, @Valid PasswordEditReqDto passwordEditReqDto){
-        User userOld = extractUserByToker(request);
+        User userOld = userComponent.extractUserByToker(request);
         if (passwordEditReqDto.newPassword().equals(passwordEditReqDto.repeatNewPassword())){
             userOld.setPassword(passwordEncoder.encode(passwordEditReqDto.newPassword()));
             userOld = userRepository.save(userOld);
@@ -72,12 +81,12 @@ public class UserService {
         throw new UserErrorException("Passwords do not match !", HttpStatus.BAD_REQUEST);
     }
 
-    public User extractUserByToker(HttpServletRequest request){
-        String authHeader = request.getHeader("Authorization");
-        String token = authHeader == null ? null :
-                authHeader.replace("Bearer ", "");
-        String suject = tokenService.valueDateToken(token);
-        return (User) userRepository.findByEmail(suject);
-
-    }
+//    public User extractUserByToker(HttpServletRequest request){
+//        String authHeader = request.getHeader("Authorization");
+//        String token = authHeader == null ? null :
+//                authHeader.replace("Bearer ", "");
+//        String suject = tokenService.valueDateToken(token);
+//        return (User) userRepository.findByEmail(suject);
+//
+//    }
 }

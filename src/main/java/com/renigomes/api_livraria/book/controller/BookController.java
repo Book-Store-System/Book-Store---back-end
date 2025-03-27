@@ -1,35 +1,32 @@
 package com.renigomes.api_livraria.book.controller;
 
-import java.math.BigDecimal;
-import java.util.List;
-
+import com.renigomes.api_livraria.DTO.RespIdDto;
 import com.renigomes.api_livraria.book.component.BookComponent;
+import com.renigomes.api_livraria.book.dto.BookStockReqDto;
 import com.renigomes.api_livraria.book.dto.BookStockRespAdminDTO;
 import com.renigomes.api_livraria.book.dto.BookStockRespUserDto;
 import com.renigomes.api_livraria.book.exception.BookDeleteError;
 import com.renigomes.api_livraria.book.model.BookStock;
+import com.renigomes.api_livraria.book.service.BookService;
+import com.renigomes.api_livraria.book.service.BookStockService;
+import com.renigomes.api_livraria.security.SecurityConfig;
+import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
-import com.renigomes.api_livraria.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.renigomes.api_livraria.DTO.RespIdDto;
-import com.renigomes.api_livraria.book.service.BookService;
-import com.renigomes.api_livraria.book.dto.BookStockReqDto;
-import com.renigomes.api_livraria.book.service.BookStockService;
-import com.renigomes.api_livraria.security.SecurityConfig;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -41,7 +38,7 @@ public class BookController {
 
     private BookService bookService;
     private BookStockService bookStockService;
-    private UserService userService;
+    private UserComponent userComponent;
     private ModelMapper modelMapper;
     private BookComponent bookComponent;
 
@@ -51,7 +48,7 @@ public class BookController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<?> findByid(@PathVariable long id, HttpServletRequest request) {
-        User user = userService.extractUserByToker(request);
+        User user = userComponent.extractUserByToker(request);
         BookStock bookStock = bookStockService.findBookByID(id);
         BigDecimal totalPrice = bookComponent.calculateTotalPrice(bookStock);
         if (user.getRole() == Role.ADMIN){
