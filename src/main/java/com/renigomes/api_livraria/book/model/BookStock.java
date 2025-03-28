@@ -1,5 +1,6 @@
 package com.renigomes.api_livraria.book.model;
 
+import com.renigomes.api_livraria.offer.model.Offer;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,5 +26,8 @@ public class BookStock {
     private BigDecimal purchasePrice;
     @Column(name = "is_deleted", insertable = false)
     private boolean isDeleted;
+    @OneToOne
+    @JoinColumn(name = "offer_id")
+    private Offer offer;
 
 }

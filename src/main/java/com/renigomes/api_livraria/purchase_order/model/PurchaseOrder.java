@@ -1,5 +1,6 @@
 package com.renigomes.api_livraria.purchase_order.model;
 
+import com.renigomes.api_livraria.cupom.model.Cupom;
 import com.renigomes.api_livraria.user.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,5 +26,8 @@ public class PurchaseOrder {
     private LocalDate orderDate;
     @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemOrder> itemOrders;
+    @OneToOne
+    @JoinColumn(name = "cupom_id")
+    private Cupom cupom;
 
 }

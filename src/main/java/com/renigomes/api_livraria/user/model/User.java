@@ -1,6 +1,8 @@
 package com.renigomes.api_livraria.user.model;
 
 import com.renigomes.api_livraria.address.model.Address;
+import com.renigomes.api_livraria.delivery_control.model.DeliveryControl;
+import com.renigomes.api_livraria.feedback.model.FeedBack;
 import com.renigomes.api_livraria.purchase_order.model.PurchaseOrder;
 import com.renigomes.api_livraria.user.enums.Role;
 import jakarta.persistence.*;
@@ -28,6 +30,10 @@ public class User implements UserDetails {
     private Role role;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DeliveryControl> deliveryControls;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedBack> feedBacks;
 
 
 
