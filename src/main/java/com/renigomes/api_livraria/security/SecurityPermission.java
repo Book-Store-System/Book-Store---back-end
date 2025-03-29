@@ -36,6 +36,9 @@ public class SecurityPermission {
                     put(HttpMethod.PATCH, new String[]{
                             "/api/book/activate/{id}"
                     });
+                    put(HttpMethod.PUT, new String[]{
+                            "/api/book/{id}"
+                    });
                     put(HttpMethod.DELETE, new String[]{
                             "/api/book/{id}",
                     });
@@ -60,6 +63,7 @@ public class SecurityPermission {
     public static final String [] API_PERMISSION_POST_ADMIN = API_WHITELIST.get(ADMIN).get(HttpMethod.POST);
     public static final String [] API_PERMISSION_PATCH_ADMIN = API_WHITELIST.get(ADMIN).get(HttpMethod.PATCH);
     public static final String [] API_PERMISSION_DELETE_ADMIN = API_WHITELIST.get(ADMIN).get(HttpMethod.DELETE);
+    public static final String [] API_PERMISSION_PUT_ADMIN = API_WHITELIST.get(ADMIN).get(HttpMethod.PUT);
     public static final String [] API_PERMISSION_PERMISSION_ALL_POST = API_WHITELIST.get(PERMIT_ALL).get(HttpMethod.POST);
     public static final String [] API_PERMISSION_PERMISSION_ALL_GET = API_WHITELIST.get(PERMIT_ALL).get(HttpMethod.GET);
 
