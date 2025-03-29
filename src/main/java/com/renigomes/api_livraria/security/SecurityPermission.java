@@ -31,10 +31,12 @@ public class SecurityPermission {
                     });
                     put(HttpMethod.POST, new String[]{
                             "/api/user/register/admin",
-                            "/api/book/**"
+                            "/api/book/**",
+                            "/api/delivery_control"
                     });
                     put(HttpMethod.PATCH, new String[]{
-                            "/api/book/activate/{id}"
+                            "/api/book/activate/{id}",
+                            "/api/delivery_control/{id_order}"
                     });
                     put(HttpMethod.PUT, new String[]{
                             "/api/book/{id}"

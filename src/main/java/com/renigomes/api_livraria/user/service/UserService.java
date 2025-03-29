@@ -39,6 +39,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public User findById(Long id){
+        return userRepository.findById(id).orElseThrow(() -> new UserErrorException("User not found", HttpStatus.NOT_FOUND));
+    }
+
     @Transactional
     public UserRespDto save(User user){
         User readerSave = userRepository.save(user);

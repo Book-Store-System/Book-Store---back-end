@@ -24,7 +24,7 @@ public class DeliveryControl {
 
     @OneToOne
     @JoinColumn(name = "order_id")
-    private PurchaseOrder orderID;
+    private PurchaseOrder order;
 
     private String transportation;
 
