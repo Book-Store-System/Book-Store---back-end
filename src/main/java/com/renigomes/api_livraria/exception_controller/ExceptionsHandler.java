@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.renigomes.api_livraria.address.exceptions.AddressException;
+import com.renigomes.api_livraria.delivery_control.exceptions.DeliveryException;
 import com.renigomes.api_livraria.purchase_order.exceptions.OrderException;
 import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,15 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
                 e.getHttpStatus(),
                 e.getMessage(),
                 "http://localhost:8080/error/order"
+        );
+    }
+
+    @ExceptionHandler(DeliveryException.class)
+    public ProblemDetail deliveryException(DeliveryException e){
+        return exceptionConfig.problemDetailConfig(
+                e.getHttpStatus(),
+                e.getMessage(),
+                "http://localhost:8080/error/delivery"
         );
     }
 

@@ -34,6 +34,11 @@ public class OrderService {
     private UserComponent userComponent;
     private ItemOrderService itemOrderService;
 
+    private OrderNotFound orderNotFound(){
+        log.error("Order not found");
+        return new OrderNotFound("Order not found", HttpStatus.NOT_FOUND);
+    }
+
     private List<ItemOrderRespDto> getItems(PurchaseOrder purOrder) {
         return purOrder.getItemOrders()
                 .stream()
@@ -104,12 +109,15 @@ public class OrderService {
                 );
     }
 
+    public PurchaseOrder sampleFindOrderById(Long id){
+        return purOrderRepository.findById(id).orElseThrow(
+                this::orderNotFound
+        );
+    }
+
     public OrderRespDto findById(Long id){
         PurchaseOrder purchaseOrder = purOrderRepository.findById(id).orElseThrow(
-                () ->{
-                    log.error("Order not found");
-                    return new OrderNotFound("Order not found", HttpStatus.NOT_FOUND);
-                }
+                this::orderNotFound
         );
         OrderRespDto orderRespDto = modelMapper.map(purchaseOrder, OrderRespDto.class);
         orderRespDto.setItems(getItems(purchaseOrder));
