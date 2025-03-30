@@ -1,5 +1,7 @@
 package com.renigomes.api_livraria.purchase_order.DTO;
 
+import com.renigomes.api_livraria.cupom.DTO.CupomRespDto;
+import com.renigomes.api_livraria.cupom.DTO.OrderCupomRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +21,6 @@ public class OrderRespDto {
     private BigDecimal shipping;
     private LocalDate orderDate;
     private String payment;
+    private OrderCupomRespDto cupom;
     private BigDecimal totalValue;
 }

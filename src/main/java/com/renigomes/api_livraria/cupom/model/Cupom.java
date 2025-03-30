@@ -1,9 +1,7 @@
 package com.renigomes.api_livraria.cupom.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.renigomes.api_livraria.cupom.enums.TypeCupom;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,8 +12,13 @@ public class Cupom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(insertable = false)
     private Boolean active;
-    private String title;
+    private String codeCupom;
     private String description;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type_cupom")
+    private TypeCupom typeCupom;
+    @Column(name = "percent_discount")
+    private Double percentDiscount;
 }

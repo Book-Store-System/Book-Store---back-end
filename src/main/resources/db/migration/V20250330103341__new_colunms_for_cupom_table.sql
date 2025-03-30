@@ -1,0 +1,3 @@
+ALTER TABLE cupom ADD COLUMN type_cupom VARCHAR(100) NOT NULL;
+ALTER TABLE cupom ADD COLUMN percent_discount NUMERIC NOT NULL;
+ALTER TABLE cupom RENAME COLUMN title TO code_cupom;
