@@ -9,6 +9,7 @@ import com.renigomes.api_livraria.book.exception.BookDeleteError;
 import com.renigomes.api_livraria.book.model.BookStock;
 import com.renigomes.api_livraria.book.service.BookService;
 import com.renigomes.api_livraria.book.service.BookStockService;
+import com.renigomes.api_livraria.offer.DTO.OfferReqDto;
 import com.renigomes.api_livraria.security.SecurityConfig;
 import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.enums.Role;
@@ -120,6 +121,16 @@ public class BookController {
         log.error("Book stock could not be deleted!");
         throw new BookDeleteError("Book stock could not be deleted!", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @Operation(
+            summary = "Add Offer",
+            description = "Method to add offer"
+    )
+    @PatchMapping("/add_offer/{id}")
+    public ResponseEntity<BookStockRespAdminDTO> addOffer(@PathVariable(name = "id") long id_book, @RequestParam Long id_offer){
+        return ResponseEntity.ok(bookStockService.addOffer(id_book, id_offer));
+    }
+
 
 
 

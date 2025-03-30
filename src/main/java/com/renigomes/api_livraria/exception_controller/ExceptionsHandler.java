@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.renigomes.api_livraria.address.exceptions.AddressException;
 import com.renigomes.api_livraria.cupom.exceptions.CupomException;
 import com.renigomes.api_livraria.delivery_control.exceptions.DeliveryException;
+import com.renigomes.api_livraria.offer.exceptions.OfferException;
 import com.renigomes.api_livraria.purchase_order.exceptions.OrderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -107,6 +108,15 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
                 e.getHttpStatus(),
                 e.getMessage(),
                 "http://localhost:8080/error/cupom"
+        );
+    }
+
+    @ExceptionHandler(OfferException.class)
+    public ProblemDetail offerException(OfferException e){
+        return exceptionConfig.problemDetailConfig(
+                e.getHttpStatus(),
+                e.getMessage(),
+                "http://localhost:8080/error/offer"
         );
     }
 

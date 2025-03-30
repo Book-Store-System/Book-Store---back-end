@@ -1,6 +1,7 @@
 package com.renigomes.api_livraria.book.service;
 
 import com.renigomes.api_livraria.book.component.BookComponent;
+import com.renigomes.api_livraria.book.dto.BookStockRespAdminDTO;
 import com.renigomes.api_livraria.book.exception.NotFoundException;
 import com.renigomes.api_livraria.book.exception.OutStockException;
 import com.renigomes.api_livraria.book.model.Book;
@@ -11,6 +12,7 @@ import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -8,6 +8,7 @@ import com.renigomes.api_livraria.cupom.enums.TypeCupom;
 import com.renigomes.api_livraria.cupom.model.Cupom;
 import com.renigomes.api_livraria.cupom.service.CupomService;
 import com.renigomes.api_livraria.purchase_order.DTO.ItemOrderRespDto;
+import com.renigomes.api_livraria.purchase_order.DTO.OfferOrderRespDto;
 import com.renigomes.api_livraria.purchase_order.DTO.OrderReqDTO;
 import com.renigomes.api_livraria.purchase_order.DTO.OrderRespDto;
 import com.renigomes.api_livraria.purchase_order.exceptions.ItemOrderException;
@@ -59,10 +60,18 @@ public class OrderService {
                                                     BigDecimal.valueOf(item.getBookStock().getProfitMargin())
                                             )
                                     ));
+                            bookRespOrderDto.setOfferOrderRespDto(item.getBookStock().getOffer() == null?
+                                    null:modelMapper.map(item.getBookStock().getOffer(), OfferOrderRespDto.class));
                             return new ItemOrderRespDto(
                                     bookRespOrderDto,
                                     item.getQuantity(),
                                     calculateSubTotal(item)
+                                            .subtract(
+                                                    item.getBookStock().getOffer() == null?
+                                                            BigDecimal.ZERO: BigDecimal.valueOf(
+                                                                    item.getBookStock().getOffer().getPercent()
+                                                    ).multiply(calculateSubTotal(item))
+                                            )
                             );
                         }
                 ).toList();
@@ -74,7 +83,8 @@ public class OrderService {
                 .map(ItemOrderRespDto::getSubTotalItem)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .add(purOrder.getShipping().subtract(
-                        purOrder.getCupom().getTypeCupom() != TypeCupom.SHIPPING ?
+                        purOrder.getCupom()==null?BigDecimal.ZERO:
+                                purOrder.getCupom().getTypeCupom() != TypeCupom.SHIPPING ?
                                 BigDecimal.ZERO :
                                 purOrder.getShipping().multiply(
                                         BigDecimal.valueOf(purOrder.getCupom().getPercentDiscount())
@@ -143,7 +153,7 @@ public class OrderService {
                                 )
 
                 ));
-        orderRespDto.setCupom(new OrderCupomRespDto(purchaseOrder.getCupom().getCodeCupom()));
+        orderRespDto.setCupom(purchaseOrder.getCupom()==null?null:new OrderCupomRespDto(purchaseOrder.getCupom().getCodeCupom()));
         return orderRespDto;
     }
 
