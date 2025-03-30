@@ -2,6 +2,11 @@ package com.renigomes.api_livraria.purchase_order.service;
 
 import com.renigomes.api_livraria.DTO.RespIdDto;
 import com.renigomes.api_livraria.book.dto.BookRespOrderDto;
+import com.renigomes.api_livraria.cupom.DTO.CupomRespDto;
+import com.renigomes.api_livraria.cupom.DTO.OrderCupomRespDto;
+import com.renigomes.api_livraria.cupom.enums.TypeCupom;
+import com.renigomes.api_livraria.cupom.model.Cupom;
+import com.renigomes.api_livraria.cupom.service.CupomService;
 import com.renigomes.api_livraria.purchase_order.DTO.ItemOrderRespDto;
 import com.renigomes.api_livraria.purchase_order.DTO.OrderReqDTO;
 import com.renigomes.api_livraria.purchase_order.DTO.OrderRespDto;
@@ -33,6 +38,7 @@ public class OrderService {
     private PurOrderRepository purOrderRepository;
     private UserComponent userComponent;
     private ItemOrderService itemOrderService;
+    private final CupomService cupomService;
 
     private OrderNotFound orderNotFound(){
         log.error("Order not found");
@@ -67,7 +73,13 @@ public class OrderService {
                 .stream()
                 .map(ItemOrderRespDto::getSubTotalItem)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .add(purOrder.getShipping());
+                .add(purOrder.getShipping().subtract(
+                        purOrder.getCupom().getTypeCupom() != TypeCupom.SHIPPING ?
+                                BigDecimal.ZERO :
+                                purOrder.getShipping().multiply(
+                                        BigDecimal.valueOf(purOrder.getCupom().getPercentDiscount())
+                                )
+                ));
     }
 
     @Transactional
@@ -121,7 +133,17 @@ public class OrderService {
         );
         OrderRespDto orderRespDto = modelMapper.map(purchaseOrder, OrderRespDto.class);
         orderRespDto.setItems(getItems(purchaseOrder));
-        orderRespDto.setTotalValue(calcTotalValue(orderRespDto.getItems(), purchaseOrder));
+        orderRespDto.setTotalValue(calcTotalValue(orderRespDto.getItems(), purchaseOrder)
+                .subtract(
+                        purchaseOrder.getCupom() == null ||
+                                purchaseOrder.getCupom().getTypeCupom() != TypeCupom.PERCENTAGE ?
+                                BigDecimal.ZERO :
+                                calcTotalValue(orderRespDto.getItems(), purchaseOrder).multiply(
+                                        BigDecimal.valueOf(purchaseOrder.getCupom().getPercentDiscount())
+                                )
+
+                ));
+        orderRespDto.setCupom(new OrderCupomRespDto(purchaseOrder.getCupom().getCodeCupom()));
         return orderRespDto;
     }
 
@@ -135,9 +157,31 @@ public class OrderService {
                             List<ItemOrderRespDto> items = getItems(purOrder);
                             OrderRespDto orderRespDto = modelMapper.map(purOrder, OrderRespDto.class);
                             orderRespDto.setItems(items);
-                            orderRespDto.setTotalValue(calcTotalValue(items, purOrder));
+                            orderRespDto.setCupom(new OrderCupomRespDto(purOrder.getCupom().getCodeCupom()));
+                            orderRespDto.setTotalValue(calcTotalValue(items, purOrder).subtract(
+                                    purOrder.getCupom() == null ||
+                                            purOrder.getCupom().getTypeCupom() != TypeCupom.PERCENTAGE ?
+                                            BigDecimal.ZERO :
+                                            calcTotalValue(items, purOrder).multiply(
+                                                    BigDecimal.valueOf(purOrder.getCupom().getPercentDiscount())
+                                            )
+
+                            ));
                             return orderRespDto;
                         }
                 ).toList();
     }
+
+    @Transactional
+    public CupomRespDto addCupom(Long id, String codeCupom){
+        PurchaseOrder purchaseOrder = purOrderRepository.findById(id).orElseThrow(
+                this::orderNotFound
+        );
+        Cupom cupom = cupomService.findCupomByCode(codeCupom);
+        purchaseOrder.setCupom(cupom);
+        purchaseOrder = purOrderRepository.save(purchaseOrder);
+        return modelMapper.map(purchaseOrder.getCupom(), CupomRespDto.class);
+    }
+
+
 }

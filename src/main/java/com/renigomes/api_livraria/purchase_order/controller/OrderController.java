@@ -1,6 +1,8 @@
 package com.renigomes.api_livraria.purchase_order.controller;
 
 import com.renigomes.api_livraria.DTO.RespIdDto;
+import com.renigomes.api_livraria.cupom.DTO.CupomReqDto;
+import com.renigomes.api_livraria.cupom.DTO.CupomRespDto;
 import com.renigomes.api_livraria.purchase_order.DTO.OrderReqDTO;
 import com.renigomes.api_livraria.purchase_order.DTO.OrderRespDto;
 import com.renigomes.api_livraria.purchase_order.service.OrderService;
@@ -27,12 +29,12 @@ public class OrderController {
     private  final OrderService orderService;
 
     @Operation(
-            summary = "create order",
-            description = "Method to create order"
+            summary = "get order by id",
+            description = "Method to get order by id"
     )
-    @PostMapping
-    public ResponseEntity<RespIdDto> createOrder(@RequestBody @Valid OrderReqDTO orderReqDTO, HttpServletRequest request) {
-        return ResponseEntity.ok(orderService.createOrder(orderReqDTO, request));
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderRespDto> getOrderById(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.findById(id));
     }
 
     @Operation(
@@ -45,13 +47,25 @@ public class OrderController {
     }
 
     @Operation(
-            summary = "get order by id",
-            description = "Method to get order by id"
+            summary = "create order",
+            description = "Method to create order"
     )
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderRespDto> getOrderById(@PathVariable Long id) {
-        return ResponseEntity.ok(orderService.findById(id));
+    @PostMapping
+    public ResponseEntity<RespIdDto> createOrder(@RequestBody @Valid OrderReqDTO orderReqDTO, HttpServletRequest request) {
+        return ResponseEntity.ok(orderService.createOrder(orderReqDTO, request));
     }
+
+    @Operation(
+            summary = "add cupom",
+            description = "Method to add cupom in order"
+    )
+    @PatchMapping("/add_cupom/{id}")
+    public ResponseEntity<CupomRespDto> addCupom(@PathVariable Long id, @RequestParam String codeCupom) {
+        return ResponseEntity.ok(orderService.addCupom(id, codeCupom));
+    }
+
+
+
 
 
 

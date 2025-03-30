@@ -71,7 +71,7 @@ public class BookController {
     }
     @Operation(
             summary = "Book search",
-            description = "Performs search for books by author, title or genre"
+            description = "Performs search for books by author, codeCupom or genre"
     )
     @GetMapping("/search")
     public ResponseEntity<List<?>> findBySearch(@RequestParam String search, HttpServletRequest request) {
