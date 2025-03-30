@@ -1,6 +1,7 @@
 package com.renigomes.api_livraria.book.dto;
 
 import com.renigomes.api_livraria.book.model.BookStock;
+import com.renigomes.api_livraria.offer.model.Offer;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -35,5 +36,7 @@ public class BookStockRespUserDto implements Serializable {
     @NotNull
     @Positive
     private BigDecimal salePrice;
+    @NotNull
+    private Offer offer;
 
 }

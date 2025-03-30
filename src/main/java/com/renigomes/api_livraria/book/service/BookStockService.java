@@ -3,7 +3,9 @@ package com.renigomes.api_livraria.book.service;
 import com.renigomes.api_livraria.DTO.RespIdDto;
 import com.renigomes.api_livraria.book.component.BookComponent;
 import com.renigomes.api_livraria.book.dto.BookRespDto;
+import com.renigomes.api_livraria.book.dto.BookStockRespAdminDTO;
 import com.renigomes.api_livraria.book.dto.BookStockRespUserDto;
+import com.renigomes.api_livraria.book.exception.BookOfferInative;
 import com.renigomes.api_livraria.book.exception.NotFoundException;
 import com.renigomes.api_livraria.book.model.Book;
 import com.renigomes.api_livraria.book.repository.BookRepository;
@@ -11,6 +13,8 @@ import com.renigomes.api_livraria.book.dto.BookStockReqDto;
 import com.renigomes.api_livraria.book.exception.UniqueTitleError;
 import com.renigomes.api_livraria.book.model.BookStock;
 import com.renigomes.api_livraria.book.repository.BookStockRepository;
+import com.renigomes.api_livraria.offer.model.Offer;
+import com.renigomes.api_livraria.offer.service.OfferService;
 import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
@@ -40,6 +44,7 @@ public class BookStockService {
     private BookRepository bookRepository;
     private BookStockRepository bookStockRepository;
     private UserComponent userComponent;
+    private OfferService offerService;
 
     private static NotFoundException get() {
         log.error(BOOK_OUT_OF_STOCK);
@@ -111,5 +116,20 @@ public class BookStockService {
                 .orElseThrow(BookStockService::get);
         bookStock.setDeleted(true);
         return bookStockRepository.save(bookStock);
+    }
+
+    @Transactional
+    public BookStockRespAdminDTO addOffer(Long offerId, long id_book_stock) {
+        Offer offer = offerService.findById(offerId);
+        BookStock bookStock = bookStockRepository.findById(id_book_stock).orElseThrow(
+                BookStockService::get
+        );
+        if (!offer.getActive())
+            throw new BookOfferInative("Offer not active!", HttpStatus.CONFLICT);
+        bookStock.setOffer(offer);
+        bookStock = bookStockRepository.save(bookStock);
+        BookStockRespAdminDTO bookStockRespAdminDTO = modelMapper.map(bookStock, BookStockRespAdminDTO.class);
+        bookStockRespAdminDTO.setBook(modelMapper.map(bookStock.getBook(), BookRespDto.class));
+        return bookStockRespAdminDTO;
     }
 }

@@ -26,7 +26,7 @@ public class BookStock {
     private BigDecimal purchasePrice;
     @Column(name = "is_deleted", insertable = false)
     private boolean isDeleted;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "offer_id")
     private Offer offer;
 

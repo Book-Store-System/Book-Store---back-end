@@ -27,18 +27,22 @@ public class SecurityPermission {
             put(ADMIN, new HashMap<HttpMethod, String []>(){
                 {
                     put(HttpMethod.GET, new String[]{
-                            "/api/user"
+                            "/api/user",
+                            "api/offer"
                     });
                     put(HttpMethod.POST, new String[]{
                             "/api/user/register/admin",
                             "/api/book/**",
                             "/api/delivery_control",
-                            "api/cupom"
+                            "api/cupom",
+                            "api/offer"
                     });
                     put(HttpMethod.PATCH, new String[]{
                             "/api/book/activate/{id}",
                             "/api/delivery_control/{id_order}",
-                            "/api/cupom/{id}"
+                            "/api/cupom/{id}",
+                            "api/offer/{id}",
+                            "api/book/add_offer/{id}"
                     });
                     put(HttpMethod.PUT, new String[]{
                             "/api/book/{id}"
