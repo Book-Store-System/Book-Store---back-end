@@ -33,5 +33,5 @@ mvn spring-boot:run
 * With the API running, access: [Api Swagger Documentation](http://localhost:8080/swagger-ui.html)
 
 ## Class Diagram
-<br>
-![Class Diagram](images\BookStore.png)
+
+![Class Diagram](images/BookStore.png)
