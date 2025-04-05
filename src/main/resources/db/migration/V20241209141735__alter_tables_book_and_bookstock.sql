@@ -15,6 +15,3 @@ ALTER TABLE book_stock DROP COLUMN barcode;
 ALTER TABLE book_stock ADD COLUMN purchase_price NUMERIC NOT NULL;
 ALTER TABLE book_stock ADD COLUMN profit_margin  NUMERIC NOT NULL;
 ALTER TABLE book_stock ADD COLUMN last_purchase  DATE NOT NULL;
-
-ALTER SEQUENCE book_stock_id_seq RESTART WITH 1;
-ALTER SEQUENCE book_id_seq RESTART WITH 1;
