@@ -1,1 +1,2 @@
-ALTER TABLE book DROP COLUMN purchase_price, DROP COLUMN profitmargin;
+ALTER TABLE book DROP COLUMN purchase_price;
+ALTER TABLE book DROP COLUMN profitmargin;
