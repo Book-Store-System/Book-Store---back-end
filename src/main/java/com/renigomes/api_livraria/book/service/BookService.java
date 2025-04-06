@@ -1,7 +1,11 @@
 package com.renigomes.api_livraria.book.service;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
 import com.renigomes.api_livraria.book.component.BookComponent;
-import com.renigomes.api_livraria.book.dto.BookStockRespAdminDTO;
 import com.renigomes.api_livraria.book.exception.NotFoundException;
 import com.renigomes.api_livraria.book.exception.OutStockException;
 import com.renigomes.api_livraria.book.model.Book;
@@ -11,14 +15,10 @@ import com.renigomes.api_livraria.book.repository.BookStockRepository;
 import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
+
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @Slf4j
@@ -30,9 +30,7 @@ public class BookService {
     private UserComponent userComponent;
     private BookComponent bookComponent;
 
-    public  List<?> findBook(String search, HttpServletRequest request){
-        search = "%"+search+"%";
-        List<Book> listBook = bookRepository.findByTitleOrAuthorOrGenre(search, search, search);
+    private List<?> getBookStock(List<Book> listBook, HttpServletRequest request){
         if (!listBook.isEmpty()){
             List<BookStock> listStockBook;
             if (request.getUserPrincipal() == null){
@@ -62,5 +60,16 @@ public class BookService {
         }
         log.error("Book not found!");
         throw new NotFoundException("Book not found!", HttpStatus.BAD_REQUEST);
+    }
+
+    public List<?> filterBookByGenre(String genre, HttpServletRequest request){
+        List<Book> listBook = bookRepository.findByGenre(genre);
+        return getBookStock(listBook, request);
+    }
+
+    public  List<?> findBook(String search, HttpServletRequest request){
+        search = "%"+search+"%";
+        List<Book> listBook = bookRepository.findByTitleOrAuthorOrGenre(search, search, search);
+        return getBookStock(listBook, request);
     }
 }
