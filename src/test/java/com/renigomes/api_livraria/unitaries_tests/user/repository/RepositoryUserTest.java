@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @ActiveProfiles("test")
 public class RepositoryUserTest {
 
-    public static final String EMAIL = "test@gmail.com";
+    private static final String EMAIL = "test@gmail.com";
     @Autowired
     private UserRepository userRepository;
 
