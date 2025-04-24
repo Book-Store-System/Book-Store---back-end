@@ -1,21 +1,17 @@
 package com.renigomes.api_livraria.unitaries_tests.user.service;
 
 import com.renigomes.api_livraria.purchase_order.model.PurchaseOrder;
-import com.renigomes.api_livraria.purchase_order.repository.PurOrderRepository;
 import com.renigomes.api_livraria.purchase_order.service.OrderService;
 import com.renigomes.api_livraria.user.DTO.UserRespDto;
-import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.exceptions.UserErrorException;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.repository.UserRepository;
 import com.renigomes.api_livraria.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -29,7 +25,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -52,11 +49,7 @@ class UserServiceTest {
     private ModelMapper modelMapper;
 
     @Mock
-    private PurOrderRepository purOrderRepository;
-
-    @Mock
     private OrderService orderService;
-
 
     private User user;
 
@@ -66,10 +59,9 @@ class UserServiceTest {
 
     private List<PurchaseOrder> orders;
 
-
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+//        MockitoAnnotations.openMocks(this);
         // user
         user = new User();
         user.setId(LONG_ID);
@@ -106,16 +98,15 @@ class UserServiceTest {
         assertNotNull(response);
         assertEquals(user.getName(), response.getName());
     }
+
     @Test
     void findByIdWhenUserNotFound() {
         when(userRepository.findById(anyLong())).thenThrow(
-                new UserErrorException(USER_NOT_FOUND, HttpStatus.NOT_FOUND)
-        );
-      UserErrorException thrown = assertThrows(
-              UserErrorException.class, () -> userService.findById(LONG_ID)
-      );
-      assertEquals(USER_NOT_FOUND, thrown.getMessage());
-      assertEquals(HttpStatus.NOT_FOUND, thrown.getHttpStatus());
+                new UserErrorException(USER_NOT_FOUND, HttpStatus.NOT_FOUND));
+        UserErrorException thrown = assertThrows(
+                UserErrorException.class, () -> userService.findById(LONG_ID));
+        assertEquals(USER_NOT_FOUND, thrown.getMessage());
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getHttpStatus());
     }
 
     @Test
@@ -138,18 +129,14 @@ class UserServiceTest {
 
     @Test
     void deleteUser() {
-        User user = new User();
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        when(purOrderRepository.findByUser(user)).thenReturn(orders);
-        when(orderService.findByUser(any(User.class))).thenReturn(orders);
+        when(orderService.findByUser(user)).thenReturn(orders);
         userService.deleteUser(1L);
         verify(userRepository).findById(anyLong());
         verify(orderService).findByUser(user);
-//        verify(orderService).save(order1);
-//        verify(orderService).save(order2);
-//        verify(userRepository, times(1)).delete(user);
+        verify(orderService, times(2)).save(any(PurchaseOrder.class));
+        verify(userRepository, times(1)).delete(user);
     }
-
 
     @Test
     void updateUser() {

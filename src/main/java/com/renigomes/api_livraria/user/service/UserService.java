@@ -12,17 +12,15 @@ import com.renigomes.api_livraria.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -32,9 +30,8 @@ public class UserService {
     private UserRepository userRepository;
     private ModelMapper modelMapper;
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private final OrderService orderService;
-    private final UserComponent userComponent;
+    private OrderService orderService;
+    private UserComponent userComponent;
 
     public UserDetails findByEmailAuth(String email){
         return userRepository.findByEmail(email);
