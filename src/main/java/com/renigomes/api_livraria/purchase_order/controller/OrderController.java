@@ -41,18 +41,18 @@ public class OrderController {
             summary = "get order",
             description = "Method to get order"
     )
-    @GetMapping
-    public ResponseEntity<List<OrderRespDto>> getOrder(HttpServletRequest request) {
-        return ResponseEntity.ok(orderService.findByOrderUser(request));
+    @GetMapping("/{id_user}")
+    public ResponseEntity<List<OrderRespDto>> getOrder(@PathVariable Long id_user) {
+        return ResponseEntity.ok(orderService.findByOrderUser(id_user));
     }
 
     @Operation(
             summary = "create order",
             description = "Method to create order"
     )
-    @PostMapping
-    public ResponseEntity<RespIdDto> createOrder(@RequestBody @Valid OrderReqDTO orderReqDTO, HttpServletRequest request) {
-        return ResponseEntity.ok(orderService.createOrder(orderReqDTO, request));
+    @PostMapping("/{id_user}")
+    public ResponseEntity<RespIdDto> createOrder(@RequestBody @Valid OrderReqDTO orderReqDTO, @PathVariable Long id_user) {
+        return ResponseEntity.ok(orderService.createOrder(orderReqDTO, id_user));
     }
 
     @Operation(

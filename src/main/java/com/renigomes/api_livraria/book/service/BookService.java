@@ -16,7 +16,6 @@ import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,10 +29,11 @@ public class BookService {
     private UserComponent userComponent;
     private BookComponent bookComponent;
 
-    private List<?> getBookStock(List<Book> listBook, HttpServletRequest request){
+    private List<?> getBookStock(List<Book> listBook, Long id_user){
         if (!listBook.isEmpty()){
             List<BookStock> listStockBook;
-            if (request.getUserPrincipal() == null){
+            User user = userComponent.extractUser(id_user);
+            if (user == null){
                 listStockBook = listBook
                         .stream()
                         .map(book -> bookStockRepository.findByBook(book).get())
@@ -41,7 +41,6 @@ public class BookService {
                         .toList();
                 return bookComponent.bookOrganizerAll(listStockBook);
             }
-            User user = userComponent.extractUserByToker(request);
             if(user.getRole() == Role.ADMIN)
                 listStockBook = listBook
                     .stream()
@@ -62,14 +61,14 @@ public class BookService {
         throw new NotFoundException("Book not found!", HttpStatus.BAD_REQUEST);
     }
 
-    public List<?> filterBookByGenre(String genre, HttpServletRequest request){
+    public List<?> filterBookByGenre(String genre, Long id_user){
         List<Book> listBook = bookRepository.findByGenre(genre);
-        return getBookStock(listBook, request);
+        return getBookStock(listBook, id_user);
     }
 
-    public  List<?> findBook(String search, HttpServletRequest request){
+    public  List<?> findBook(String search, Long id_user){
         search = "%"+search+"%";
         List<Book> listBook = bookRepository.findByTitleOrAuthorOrGenre(search, search, search);
-        return getBookStock(listBook, request);
+        return getBookStock(listBook, id_user);
     }
 }

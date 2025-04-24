@@ -9,7 +9,6 @@ import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.exceptions.UserErrorException;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.repository.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +17,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +32,7 @@ public class UserService {
     private UserRepository userRepository;
     private ModelMapper modelMapper;
     private PasswordEncoder passwordEncoder;
+    @Autowired
     private final OrderService orderService;
     private final UserComponent userComponent;
 
@@ -54,20 +55,20 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(HttpServletRequest request){
-       User user = userComponent.extractUserByToker(request);
-        List<PurchaseOrder> purchaseOrder = orderService.findByUser(user);
-        purchaseOrder.forEach(order -> {
+    public void deleteUser(Long id){
+       User user = userRepository.findById(id).orElseThrow(() -> new UserErrorException("User not found", HttpStatus.NOT_FOUND));
+       List<PurchaseOrder> purchaseOrder = orderService.findByUser(user);
+       purchaseOrder.forEach(order -> {
             order.setUser(null);
             orderService.save(order);
-        });
+       });
        userRepository.delete(user);
     }
 
 
     @Transactional
-    public boolean updateUser(HttpServletRequest request, UserEditReqDTO userEditReqDTO){
-        User userOld = userComponent.extractUserByToker(request);
+    public boolean updateUser(Long id_user, UserEditReqDTO userEditReqDTO){
+        User userOld = userComponent.extractUser(id_user);
         BeanUtils.copyProperties(userEditReqDTO, userOld);
         userRepository.save(userOld);
         return userOld.getEmail().equals(userEditReqDTO.getEmail()) &&
@@ -76,8 +77,8 @@ public class UserService {
     }
 
     @Transactional
-    public boolean updateUserPassword(HttpServletRequest request, @Valid PasswordEditReqDto passwordEditReqDto){
-        User userOld = userComponent.extractUserByToker(request);
+    public boolean updateUserPassword(Long id_user, @Valid PasswordEditReqDto passwordEditReqDto){
+        User userOld = userComponent.extractUser(id_user);
         if (passwordEditReqDto.newPassword().equals(passwordEditReqDto.repeatNewPassword())){
             userOld.setPassword(passwordEncoder.encode(passwordEditReqDto.newPassword()));
             userOld = userRepository.save(userOld);

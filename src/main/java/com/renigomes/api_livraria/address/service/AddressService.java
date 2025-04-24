@@ -11,8 +11,6 @@ import com.renigomes.api_livraria.address.model.Address;
 import com.renigomes.api_livraria.address.repository.AddressRepository;
 import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.model.User;
-import com.renigomes.api_livraria.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -43,14 +41,14 @@ public class AddressService {
         return new AddressNotFound(ADDRESS_NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
 
-    public AddressRespDto findAddressDefault(HttpServletRequest request){
-        User user = userComponent.extractUserByToker(request);
+    public AddressRespDto findAddressDefault(Long id_user){
+        User user = userComponent.extractUser(id_user);
         Address address = addressRepository.findAddressDefaultByUserId(user.getId());
         return modelMapper.map(address, AddressRespDto.class);
     }
 
-    public List<AddressRespDto> getAddressById(HttpServletRequest request) {
-        User user = userComponent.extractUserByToker(request);
+    public List<AddressRespDto> getAddressById(Long id) {
+        User user = userComponent.extractUser(id);
         List<Address> addresses = addressRepository.findByUserId(user.getId());
         if (addresses.isEmpty()) {
             log.error(THIS_USER_HAS_NO_ADDRESS);
@@ -64,8 +62,8 @@ public class AddressService {
     }
 
     @Transactional
-    public RespIdDto createAddress(HttpServletRequest request, AddressReqDto addressReqDto) {
-        User user = userComponent.extractUserByToker(request);
+    public RespIdDto createAddress(Long id_user, AddressReqDto addressReqDto) {
+        User user = userComponent.extractUser(id_user);
         Address addressSaved = modelMapper.map(addressReqDto, Address.class);
         addressSaved.setUser(user);
         addressSaved.setAddressDefault(addressRepository.countAddressByUserId(user.getId()) == 0);

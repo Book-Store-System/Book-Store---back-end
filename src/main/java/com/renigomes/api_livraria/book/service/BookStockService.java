@@ -4,7 +4,6 @@ import com.renigomes.api_livraria.DTO.RespIdDto;
 import com.renigomes.api_livraria.book.component.BookComponent;
 import com.renigomes.api_livraria.book.dto.BookRespDto;
 import com.renigomes.api_livraria.book.dto.BookStockRespAdminDTO;
-import com.renigomes.api_livraria.book.dto.BookStockRespUserDto;
 import com.renigomes.api_livraria.book.exception.BookOfferInative;
 import com.renigomes.api_livraria.book.exception.NotFoundException;
 import com.renigomes.api_livraria.book.model.Book;
@@ -18,13 +17,10 @@ import com.renigomes.api_livraria.offer.service.OfferService;
 import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
-import com.renigomes.api_livraria.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,11 +71,12 @@ public class BookStockService {
           );
     }
 
-    public List<?> findAllBooks(HttpServletRequest request){
+    public List<?> findAllBooks(Long id_user){
         List<BookStock> books;
-        if (request.getUserPrincipal() == null)
+        User user = userComponent.extractUser(id_user);
+        if (user == null)
             return bookComponent.bookOrganizerAll(bookStockRepository.findAll());
-        User user = userComponent.extractUserByToker(request);
+        user = userComponent.extractUser(id_user);
         if (user.getRole() == Role.ADMIN) books = bookStockRepository.findAll();
         else books = bookStockRepository.findAll()
                 .stream()

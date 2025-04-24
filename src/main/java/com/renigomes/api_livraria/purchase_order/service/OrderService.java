@@ -18,7 +18,6 @@ import com.renigomes.api_livraria.purchase_order.model.PurchaseOrder;
 import com.renigomes.api_livraria.purchase_order.repository.PurOrderRepository;
 import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.model.User;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -37,9 +36,9 @@ public class OrderService {
 
     private final ModelMapper modelMapper;
     private PurOrderRepository purOrderRepository;
-    private UserComponent userComponent;
     private ItemOrderService itemOrderService;
     private final CupomService cupomService;
+    private final UserComponent userComponent;
 
     private OrderNotFound orderNotFound(){
         log.error("Order not found");
@@ -93,8 +92,8 @@ public class OrderService {
     }
 
     @Transactional
-    public RespIdDto createOrder(OrderReqDTO orderReqDTO, HttpServletRequest request) {
-        User user = userComponent.extractUserByToker(request);
+    public RespIdDto createOrder(OrderReqDTO orderReqDTO, Long id_user) {
+        User user = userComponent.extractUser(id_user);
         PurchaseOrder purOrder = modelMapper.map(orderReqDTO, PurchaseOrder.class);
         purOrder.setUser(user);
         purOrder.setOrderDate(LocalDate.now());
@@ -157,8 +156,8 @@ public class OrderService {
         return orderRespDto;
     }
 
-    public List<OrderRespDto> findByOrderUser(HttpServletRequest request) {
-        User user = userComponent.extractUserByToker(request);
+    public List<OrderRespDto> findByOrderUser(Long id) {
+        User user = userComponent.extractUser(id);
         List<PurchaseOrder> purchaseOrders = purOrderRepository.findByUser(user);
         return purchaseOrders
                 .stream()
