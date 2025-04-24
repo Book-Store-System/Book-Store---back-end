@@ -8,8 +8,6 @@ import com.renigomes.api_livraria.feedback.model.FeedBack;
 import com.renigomes.api_livraria.feedback.repository.FeedBackRepository;
 import com.renigomes.api_livraria.user.DTO.UserRespFeedBackDto;
 import com.renigomes.api_livraria.user.component.UserComponent;
-import com.renigomes.api_livraria.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -27,9 +25,9 @@ public class FeedBackService {
     private final UserComponent userComponent;
 
     @Transactional
-    public FeedBackRespDto createFeedback(FeedBackReqDto feedBackReqDto, HttpServletRequest request) {
+    public FeedBackRespDto createFeedback(FeedBackReqDto feedBackReqDto, Long id_user) {
         FeedBack feedBack = modelMapper.map(feedBackReqDto, FeedBack.class);
-        feedBack.setUser(userComponent.extractUserByToker(request));
+        feedBack.setUser(userComponent.extractUser(id_user));
         feedBack.setBookStock(bookStockService.findBookByID(feedBackReqDto.getBookStock_id()));
         feedBack = feedBackRepository.save(feedBack);
         FeedBackRespDto feedBackRespDto = modelMapper.map(feedBack, FeedBackRespDto.class);

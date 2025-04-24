@@ -11,7 +11,6 @@ import com.renigomes.api_livraria.cupom.repository.CupomRepository;
 import com.renigomes.api_livraria.user.component.UserComponent;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -68,8 +67,8 @@ public class CupomService {
         return cupomRepository.save(cupom);
     }
 
-    public List<?> findCupomAll(HttpServletRequest request) {
-        User user = userComponent.extractUserByToker(request);
+    public List<?> findCupomAll(Long id_user) {
+        User user = userComponent.extractUser(id_user);
         return user.getRole() == Role.ADMIN ?
                 cupomRepository.findAll()
                         .stream()

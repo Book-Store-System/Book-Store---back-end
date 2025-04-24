@@ -45,9 +45,9 @@ public class AdressController {
             summary = "Find user default address",
             description = "Method to find a default address"
     )
-    @GetMapping("/default")
-    public ResponseEntity<AddressRespDto> findAddressDefault(HttpServletRequest request) {
-        return ResponseEntity.ok(addressService.findAddressDefault(request));
+    @GetMapping("/{id_user}/default")
+    public ResponseEntity<AddressRespDto> findAddressDefault(@PathVariable Long id_user) {
+        return ResponseEntity.ok(addressService.findAddressDefault(id_user));
     }
 
 
@@ -55,18 +55,18 @@ public class AdressController {
             summary = "Find user address",
             description = "Method to find a address by user id"
     )
-    @GetMapping
-    public ResponseEntity<List<AddressRespDto>>  findUserAddress(HttpServletRequest request) {
-        return ResponseEntity.ok(addressService.getAddressById(request));
+    @GetMapping("/{id_user}")
+    public ResponseEntity<List<AddressRespDto>>  findUserAddress(@PathVariable Long id_user) {
+        return ResponseEntity.ok(addressService.getAddressById(id_user));
     }
 
     @Operation(
             summary = "Create a address",
             description = "Method to create a address by user id"
     )
-    @PostMapping
-    public ResponseEntity<RespIdDto> createAddress(HttpServletRequest request, @RequestBody @Valid AddressReqDto address) {
-        return ResponseEntity.ok(addressService.createAddress(request, address));
+    @PostMapping("/{id_user}")
+    public ResponseEntity<RespIdDto> createAddress(@PathVariable Long id_user, @RequestBody @Valid AddressReqDto address) {
+        return ResponseEntity.ok(addressService.createAddress(id_user, address));
     }
 
     @Operation(

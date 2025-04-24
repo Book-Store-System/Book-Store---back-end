@@ -11,7 +11,6 @@ import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -108,10 +107,10 @@ public class UserController {
             method =  "Method to edit a user",
             tags = "User"
     )
-    @PatchMapping
-    public ResponseEntity<?> updateUser(HttpServletRequest request, @RequestBody @Valid UserEditReqDTO userEditReqDTO){
-        if (userService.updateUser(request, userEditReqDTO))
-            return ResponseEntity.ok(new RespIdDto(userComponent.extractUserByToker(request).getId()));
+    @PatchMapping("/{id_user}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id_user, @RequestBody @Valid UserEditReqDTO userEditReqDTO){
+        if (userService.updateUser(id_user, userEditReqDTO))
+            return ResponseEntity.ok(new RespIdDto(userComponent.extractUser(id_user).getId()));
         log.error(UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED);
         throw new UserErrorException(UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -121,11 +120,11 @@ public class UserController {
             method = "Method to change password",
             tags = "User"
     )
-    @PutMapping("/password")
-    public ResponseEntity<?> changeUserPassword(HttpServletRequest request,
+    @PutMapping("/{id_user}/password")
+    public ResponseEntity<?> changeUserPassword(@PathVariable Long id_user,
                                                 @RequestBody @Valid PasswordEditReqDto passwordEditReqDto){
-       if(userService.updateUserPassword(request, passwordEditReqDto)){
-           User user = userComponent.extractUserByToker(request);
+       if(userService.updateUserPassword(id_user, passwordEditReqDto)){
+           User user = userComponent.extractUser(id_user);
            return ResponseEntity.ok(new RespIdDto(user.getId()));
        }
        log.error("Unexpected error. Passwords don't match!");
@@ -137,9 +136,9 @@ public class UserController {
             method = "Method to delete a user",
             tags = "User"
     )
-    @DeleteMapping
-    public ResponseEntity<Void> deleteUser(HttpServletRequest request){
-        userService.deleteUser(request);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id){
+        userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 

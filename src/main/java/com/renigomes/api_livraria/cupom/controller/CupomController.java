@@ -31,8 +31,8 @@ public class CupomController {
             description = "Method to find all cupom"
     )
     @GetMapping
-    public ResponseEntity<?> findAll(HttpServletRequest request) {
-        return ResponseEntity.ok(cupomService.findCupomAll(request));
+    public ResponseEntity<?> findAll(Long id_user) {
+        return ResponseEntity.ok(cupomService.findCupomAll(id_user));
     }
 
     @Operation(

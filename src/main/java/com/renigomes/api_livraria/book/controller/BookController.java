@@ -34,7 +34,6 @@ import com.renigomes.api_livraria.user.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,8 +57,8 @@ public class BookController {
         description = "Method to filter book by genre"
     )
     @GetMapping("/filter")
-    public ResponseEntity<List<?>> filterBookByGenre(@RequestParam String genre, HttpServletRequest request) {
-        return ResponseEntity.ok(bookService.filterBookByGenre(genre, request));
+    public ResponseEntity<List<?>> filterBookByGenre(@RequestParam String genre, Long id_user) {
+        return ResponseEntity.ok(bookService.filterBookByGenre(genre, id_user));
     }
 
     @Operation(
@@ -67,8 +66,8 @@ public class BookController {
             description = "Method to find book by id"
     )
     @GetMapping("/{id}")
-    public ResponseEntity<?> findByid(@PathVariable long id, HttpServletRequest request) {
-        User user = userComponent.extractUserByToker(request);
+    public ResponseEntity<?> findByid(@PathVariable long id, @RequestParam Long id_user) {
+        User user = userComponent.extractUser(id_user);
         BookStock bookStock = bookStockService.findBookByID(id);
         BigDecimal totalPrice = bookComponent.calculateTotalPrice(bookStock);
         if (user.getRole() == Role.ADMIN){
@@ -85,17 +84,17 @@ public class BookController {
             summary = "Find all book stock",
             description = "Method to find all book stock"
     )
-    @GetMapping
-    public ResponseEntity<List<?>> getAllBookStock(HttpServletRequest request){
-        return ResponseEntity.ok(bookStockService.findAllBooks(request));
+    @GetMapping("/{id_user}")
+    public ResponseEntity<List<?>> getAllBookStock(@PathVariable Long id_user) {
+        return ResponseEntity.ok(bookStockService.findAllBooks(id_user));
     }
     @Operation(
             summary = "Book search",
             description = "Performs search for books by author, codeCupom or genre"
     )
     @GetMapping("/search")
-    public ResponseEntity<List<?>> findBySearch(@RequestParam String search, HttpServletRequest request) {
-        return ResponseEntity.ok(bookService.findBook(search, request));
+    public ResponseEntity<List<?>> findBySearch(@RequestParam String search, Long id_user) {
+        return ResponseEntity.ok(bookService.findBook(search, id_user));
     }
     @Operation(
             summary = "Create stock and book",
