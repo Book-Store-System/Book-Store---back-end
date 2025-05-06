@@ -37,7 +37,7 @@ public class FeedBookController {
             summary = "Create new feedback",
             description = "Method responsible for creating a new feedback"
     )
-    @PostMapping("/id_user")
+    @PostMapping("/{id_user}")
     public ResponseEntity<FeedBackRespDto> createFeedback(@RequestBody @Valid FeedBackReqDto feedBackReqDto,@PathVariable Long id_user) {
         return ResponseEntity.ok(feedBackService.createFeedback(feedBackReqDto, id_user));
     }

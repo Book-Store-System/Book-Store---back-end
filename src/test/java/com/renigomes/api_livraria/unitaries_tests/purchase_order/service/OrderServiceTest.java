@@ -1,6 +1,5 @@
 package com.renigomes.api_livraria.unitaries_tests.purchase_order.service;
 
-import com.renigomes.api_livraria.purchase_order.DTO.OrderRespDto;
 import com.renigomes.api_livraria.purchase_order.model.PurchaseOrder;
 import com.renigomes.api_livraria.purchase_order.repository.PurOrderRepository;
 import com.renigomes.api_livraria.purchase_order.service.OrderService;
@@ -12,12 +11,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

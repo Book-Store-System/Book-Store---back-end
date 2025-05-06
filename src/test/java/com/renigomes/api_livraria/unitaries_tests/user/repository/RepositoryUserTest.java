@@ -3,6 +3,7 @@ package com.renigomes.api_livraria.unitaries_tests.user.repository;
 import com.renigomes.api_livraria.user.enums.Role;
 import com.renigomes.api_livraria.user.model.User;
 import com.renigomes.api_livraria.user.repository.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -28,6 +29,7 @@ public class RepositoryUserTest {
 
 
     @Test
+    @DisplayName("findByEmail_WhenUserExists_ReturnUserDetails")
     public void findByEmail_WhenUserExists_ReturnUserDetails() {
         User user = new User();
         user.setName("Test");
@@ -45,6 +47,7 @@ public class RepositoryUserTest {
     }
 
     @Test
+    @DisplayName("findByEmail_WhenUserNotExists_ReturnNull")
     public void findByEmail_WhenUserNotExists_ReturnNull(){
 
         UserDetails response = userRepository.findByEmail(EMAIL);

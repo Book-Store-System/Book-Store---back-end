@@ -67,10 +67,10 @@ public class UserService {
     public boolean updateUser(Long id_user, UserEditReqDTO userEditReqDTO){
         User userOld = userComponent.extractUser(id_user);
         BeanUtils.copyProperties(userEditReqDTO, userOld);
-        userRepository.save(userOld);
-        return userOld.getEmail().equals(userEditReqDTO.getEmail()) &&
-                userOld.getName().equals(userEditReqDTO.getName()) &&
-                userOld.getSurname().equals(userEditReqDTO.getSurname());
+        User userEdit =  userRepository.save(userOld);
+        return userEdit.getEmail().equals(userEditReqDTO.getEmail()) &&
+                userEdit.getName().equals(userEditReqDTO.getName()) &&
+                userEdit.getSurname().equals(userEditReqDTO.getSurname());
     }
 
     @Transactional
