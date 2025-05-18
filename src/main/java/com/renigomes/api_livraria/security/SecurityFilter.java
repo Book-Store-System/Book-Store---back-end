@@ -1,7 +1,7 @@
 package com.renigomes.api_livraria.security;
 
 import com.renigomes.api_livraria.security.service.TokenService;
-import com.renigomes.api_livraria.user.repository.UserRepository;
+import com.renigomes.api_livraria.user_package.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

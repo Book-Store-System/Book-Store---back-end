@@ -4,11 +4,11 @@ import java.net.URI;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.renigomes.api_livraria.address.exceptions.AddressException;
-import com.renigomes.api_livraria.cupom.exceptions.CupomException;
-import com.renigomes.api_livraria.delivery_control.exceptions.DeliveryException;
-import com.renigomes.api_livraria.offer.exceptions.OfferException;
-import com.renigomes.api_livraria.purchase_order.exceptions.OrderException;
+import com.renigomes.api_livraria.user_package.address.exceptions.AddressException;
+import com.renigomes.api_livraria.order_package.cupom.exceptions.CupomException;
+import com.renigomes.api_livraria.order_package.delivery_control.exceptions.DeliveryException;
+import com.renigomes.api_livraria.book_package.offer.exceptions.OfferException;
+import com.renigomes.api_livraria.order_package.purchase_order.exceptions.OrderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.renigomes.api_livraria.book.exception.BookException;
+import com.renigomes.api_livraria.book_package.book.exception.BookException;
 import com.renigomes.api_livraria.config.ExceptionConfig;
 import com.renigomes.api_livraria.security.security_exception.TokenException;
-import com.renigomes.api_livraria.user.exceptions.UserException;
+import com.renigomes.api_livraria.user_package.user.exceptions.UserException;
 
 @RestControllerAdvice
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {

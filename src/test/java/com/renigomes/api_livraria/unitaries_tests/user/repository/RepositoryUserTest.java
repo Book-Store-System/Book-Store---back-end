@@ -1,8 +1,8 @@
 package com.renigomes.api_livraria.unitaries_tests.user.repository;
 
-import com.renigomes.api_livraria.user.enums.Role;
-import com.renigomes.api_livraria.user.model.User;
-import com.renigomes.api_livraria.user.repository.UserRepository;
+import com.renigomes.api_livraria.user_package.user.enums.Role;
+import com.renigomes.api_livraria.user_package.user.model.User;
+import com.renigomes.api_livraria.user_package.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
