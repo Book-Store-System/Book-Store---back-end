@@ -57,7 +57,7 @@ public class SecurityPermission {
                     put(HttpMethod.GET, new String []{
                             "/api/book",
                             "/api/book/search",
-                            "/api/book/filter"
+                            "/api/book/filter/**"
                     });
                     put(HttpMethod.POST, new String[]{
                             "/api/user/register",

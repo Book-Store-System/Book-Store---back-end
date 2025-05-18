@@ -1,0 +1,23 @@
+package com.renigomes.api_livraria.book_package.offer.DTO;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class OfferRespDto {
+    @NotNull
+    private Long id;
+    @NotBlank
+    private String title;
+    @NotNull
+    private Boolean active;
+    @NotNull
+    private Double percent;
+}

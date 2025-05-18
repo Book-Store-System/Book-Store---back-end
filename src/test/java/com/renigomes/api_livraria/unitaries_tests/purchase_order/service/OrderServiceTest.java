@@ -1,9 +1,9 @@
 package com.renigomes.api_livraria.unitaries_tests.purchase_order.service;
 
-import com.renigomes.api_livraria.purchase_order.model.PurchaseOrder;
-import com.renigomes.api_livraria.purchase_order.repository.PurOrderRepository;
-import com.renigomes.api_livraria.purchase_order.service.OrderService;
-import com.renigomes.api_livraria.user.model.User;
+import com.renigomes.api_livraria.order_package.purchase_order.model.PurchaseOrder;
+import com.renigomes.api_livraria.order_package.purchase_order.repository.PurOrderRepository;
+import com.renigomes.api_livraria.order_package.purchase_order.service.OrderService;
+import com.renigomes.api_livraria.user_package.user.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
