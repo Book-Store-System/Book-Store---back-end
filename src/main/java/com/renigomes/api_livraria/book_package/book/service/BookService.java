@@ -62,6 +62,7 @@ public class BookService {
     }
 
     public List<?> filterBookByGenre(String category, Long id_user){
+        category = '%' +  category + '%';
         List<Book> listBook = bookRepository.findByCategory_Name(category);
         return getBookStock(listBook, id_user);
     }

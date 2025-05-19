@@ -27,12 +27,12 @@ public class BookStockRespUserDto implements Serializable {
     @NotNull
     @Positive
     private  Long quantityInStock;
-    @NotNull
-    @Positive
-    private double profitMargin;
-    @NotNull
-    @Positive
-    private BigDecimal purchasePrice;
+//    @NotNull
+//    @Positive
+//    private double profitMargin;
+//    @NotNull
+//    @Positive
+//    private BigDecimal purchasePrice;
     @NotNull
     @Positive
     private BigDecimal salePrice;

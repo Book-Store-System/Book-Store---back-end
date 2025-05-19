@@ -2,13 +2,18 @@ package com.renigomes.api_livraria.user_package.user.service;
 
 import com.renigomes.api_livraria.order_package.purchase_order.model.PurchaseOrder;
 import com.renigomes.api_livraria.order_package.purchase_order.service.OrderService;
+import com.renigomes.api_livraria.security.component.TokenComponent;
+import com.renigomes.api_livraria.security.service.TokenService;
 import com.renigomes.api_livraria.user_package.user.DTO.PasswordEditReqDto;
 import com.renigomes.api_livraria.user_package.user.DTO.UserEditReqDTO;
 import com.renigomes.api_livraria.user_package.user.DTO.UserRespDto;
 import com.renigomes.api_livraria.user_package.user.component.UserComponent;
+import com.renigomes.api_livraria.user_package.user.enums.Role;
+import com.renigomes.api_livraria.user_package.user.exceptions.UnauthorizedUserException;
 import com.renigomes.api_livraria.user_package.user.exceptions.UserErrorException;
 import com.renigomes.api_livraria.user_package.user.model.User;
 import com.renigomes.api_livraria.user_package.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +37,26 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     private OrderService orderService;
     private UserComponent userComponent;
+    private TokenComponent tokenComponent;
+    private TokenService tokenService;
 
-    public UserDetails findByEmailAuth(String email){
+    public UserDetails findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public UserDetails findByEmailAuth(String email, HttpServletRequest request){
+        String token = tokenComponent.recorverToken(request);
+        String emailUser = tokenService.valueDateToken(token);
+        UserDetails getUser = userRepository.findByEmail(emailUser);
+        if (email != null && !email.equals(getUser.getUsername())){
+            if (((User) getUser).getRole() != Role.ADMIN) {
+                log.error("You do not have authorization to proceed");
+                throw new UnauthorizedUserException("You do not have authorization to proceed",
+                        HttpStatus.FORBIDDEN);
+            }
+            return userRepository.findByEmail(email);
+        }
+        return getUser;
     }
 
     public User findById(Long id){
