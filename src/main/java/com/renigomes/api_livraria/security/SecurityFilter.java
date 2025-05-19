@@ -1,5 +1,6 @@
 package com.renigomes.api_livraria.security;
 
+import com.renigomes.api_livraria.security.component.TokenComponent;
 import com.renigomes.api_livraria.security.service.TokenService;
 import com.renigomes.api_livraria.user_package.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -20,10 +21,11 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private UserRepository userRepository;
     private TokenService tokenService;
+    private TokenComponent tokenComponent;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = recorverToken(request);
+        String token = tokenComponent.recorverToken(request);
         if(token != null){
             String subject = tokenService.valueDateToken(token);
             UserDetails userDetails = userRepository.findByEmail(subject);
@@ -33,11 +35,5 @@ public class SecurityFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
-    }
-
-    private String recorverToken(HttpServletRequest request){
-        String authHeader = request.getHeader("Authorization");
-        return authHeader == null ? null :
-                authHeader.replace("Bearer ", "");
     }
 }

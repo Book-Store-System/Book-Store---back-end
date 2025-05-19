@@ -2,6 +2,8 @@ package com.renigomes.api_livraria.unitaries_tests.user.service;
 
 import com.renigomes.api_livraria.order_package.purchase_order.model.PurchaseOrder;
 import com.renigomes.api_livraria.order_package.purchase_order.service.OrderService;
+import com.renigomes.api_livraria.security.component.TokenComponent;
+import com.renigomes.api_livraria.security.service.TokenService;
 import com.renigomes.api_livraria.user_package.user.DTO.PasswordEditReqDto;
 import com.renigomes.api_livraria.user_package.user.DTO.UserEditReqDTO;
 import com.renigomes.api_livraria.user_package.user.DTO.UserRespDto;
@@ -10,6 +12,8 @@ import com.renigomes.api_livraria.user_package.user.exceptions.UserErrorExceptio
 import com.renigomes.api_livraria.user_package.user.model.User;
 import com.renigomes.api_livraria.user_package.user.repository.UserRepository;
 import com.renigomes.api_livraria.user_package.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,7 +61,18 @@ class UserServiceTest {
     @Mock
     private UserComponent userComponent;
 
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private TokenService tokenService;
+
+    @Mock
+    private TokenComponent tokenComponent;
+
     private User user, userEdit;
+
+    private UserDetails userDetails;
 
     private UserRespDto userRespDto;
 
@@ -65,6 +80,7 @@ class UserServiceTest {
     private UserEditReqDTO userEditReqDTO;
 
     private List<PurchaseOrder> orders;
+
 
     @BeforeEach
     public void setUp() {
@@ -107,13 +123,18 @@ class UserServiceTest {
         PasswordEditReqDto passwordEditReqDto = new PasswordEditReqDto(
                 PASSWORD, PASSWORD
         );
+
+        userDetails = new User();
+        ((User) userDetails).setName("Teste");
     }
 
     @Test
-    @DisplayName("findByEmailAuth_WhenUserExists_ReturnUserDetails")
+    @DisplayName("findByEmailAuth_WhenEmailIsNull_ReturnUserDetails")
     void findByEmailAuth() {
+        when(tokenComponent.recorverToken(request)).thenReturn("token");
+        when(tokenService.valueDateToken(eq("token"))).thenReturn("teste@teste.com");
         when(userRepository.findByEmail(anyString())).thenReturn(user);
-        UserDetails response = userService.findByEmailAuth(EMAIL);
+        UserDetails response = userService.findByEmailAuth(null, request);
         assertNotNull(response);
         assertEquals(EMAIL, response.getUsername());
     }

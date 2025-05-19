@@ -11,6 +11,7 @@ import com.renigomes.api_livraria.user_package.user.model.User;
 import com.renigomes.api_livraria.user_package.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +45,12 @@ public class UserController {
             tags = "User"
     )
     @GetMapping()
-    public ResponseEntity<?> findByEmail(@RequestParam String email){
-        User user = (User) userService.findByEmailAuth(email);
-        if (user == null)
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> findByEmail(@RequestParam(required = false) String email, HttpServletRequest request){
+        User user = (User) userService.findByEmailAuth(email, request);
+        if (user == null){
+            log.error("User not found");
+            throw new UserErrorException("User not found", HttpStatus.NOT_FOUND);
+        }
         return ResponseEntity.ok(modelMapper.map(user, UserRespDto.class));
     }
 
@@ -59,7 +62,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> createUserClient(@RequestBody @Valid UserReqDto userReqDto){
         if (userService.
-                findByEmailAuth(userReqDto.getEmail()) != null)
+                findByEmail(userReqDto.getEmail()) != null)
             return ResponseEntity.badRequest().body("This user has already been registered");
 
         User user = modelMapper.map(userReqDto, User.class);
@@ -75,7 +78,7 @@ public class UserController {
     )
     @PostMapping("/register/admin")
     public ResponseEntity<?> createUserAdmin(@RequestBody @Valid UserReqDto userReqDto){
-        if (userService.findByEmailAuth(userReqDto.getEmail()) != null)
+        if (userService.findByEmail(userReqDto.getEmail()) != null)
             return ResponseEntity.badRequest().body("This admin has already been registered");
 
         User user = modelMapper.map(userReqDto, User.class);

@@ -27,7 +27,6 @@ public class SecurityPermission {
             put(ADMIN, new HashMap<HttpMethod, String []>(){
                 {
                     put(HttpMethod.GET, new String[]{
-                            "/api/user",
                             "api/offer"
                     });
                     put(HttpMethod.POST, new String[]{
