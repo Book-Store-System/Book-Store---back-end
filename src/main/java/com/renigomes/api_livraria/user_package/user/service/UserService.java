@@ -5,17 +5,22 @@ import com.renigomes.api_livraria.order_package.purchase_order.service.OrderServ
 import com.renigomes.api_livraria.security.component.TokenComponent;
 import com.renigomes.api_livraria.security.service.TokenService;
 import com.renigomes.api_livraria.user_package.user.DTO.PasswordEditReqDto;
+import com.renigomes.api_livraria.user_package.user.DTO.ReqPasswordRecovery;
 import com.renigomes.api_livraria.user_package.user.DTO.UserEditReqDTO;
 import com.renigomes.api_livraria.user_package.user.DTO.UserRespDto;
 import com.renigomes.api_livraria.user_package.user.component.UserComponent;
+import com.renigomes.api_livraria.user_package.user.enums.MessageEnum;
 import com.renigomes.api_livraria.user_package.user.enums.Role;
+import com.renigomes.api_livraria.user_package.user.exceptions.SendEmailException;
 import com.renigomes.api_livraria.user_package.user.exceptions.UnauthorizedUserException;
 import com.renigomes.api_livraria.user_package.user.exceptions.UserErrorException;
 import com.renigomes.api_livraria.user_package.user.model.User;
 import com.renigomes.api_livraria.user_package.user.repository.UserRepository;
+import com.renigomes.api_livraria.user_package.user.threads.TimedCodGen;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -39,6 +44,11 @@ public class UserService {
     private UserComponent userComponent;
     private TokenComponent tokenComponent;
     private TokenService tokenService;
+    private TimedCodGen timedCodGen;
+
+    @Setter
+    private static int recoveryCode;
+
 
     public UserDetails findByEmail(String email) {
         return userRepository.findByEmail(email);
@@ -94,9 +104,7 @@ public class UserService {
                 userEdit.getSurname().equals(userEditReqDTO.getSurname());
     }
 
-    @Transactional
-    public boolean updateUserPassword(Long id_user, @Valid PasswordEditReqDto passwordEditReqDto){
-        User userOld = userComponent.extractUser(id_user);
+    private boolean validPassword(@Valid PasswordEditReqDto passwordEditReqDto, User userOld) {
         if (passwordEditReqDto.newPassword().equals(passwordEditReqDto.repeatNewPassword())){
             userOld.setPassword(passwordEncoder.encode(passwordEditReqDto.newPassword()));
             userOld = userRepository.save(userOld);
@@ -104,5 +112,34 @@ public class UserService {
         }
         log.error("Passwords don't match!");
         throw new UserErrorException("Passwords do not match !", HttpStatus.BAD_REQUEST);
+    }
+
+    @Transactional
+    public boolean updateUserPassword(Long id_user, @Valid PasswordEditReqDto passwordEditReqDto){
+        User userOld = userComponent.extractUser(id_user);
+        return validPassword(passwordEditReqDto, userOld);
+    }
+
+    @Transactional
+    public boolean updateUserPassword(String email, @Valid PasswordEditReqDto passwordEditReqDto){
+        User userOld = userComponent.extractUser(email);
+        return validPassword(passwordEditReqDto, userOld);
+    }
+
+    public boolean passwordRecoveryCode(ReqPasswordRecovery reqPasswordRecovery){
+        try {
+            timedCodGen.start();
+            String message = MessageEnum.BODY_MESSAGE.message + recoveryCode;
+            return userComponent.sendEmail(reqPasswordRecovery.email(),
+                    MessageEnum.SUBJECT_MESSAGE.message, message);
+        } catch (Exception e){
+            log.error(e.getMessage());
+            throw new SendEmailException("Error sending recovery email", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public boolean isRecoveryCode(double reqRecoveryCode){
+        timedCodGen.interrupt();
+        return recoveryCode == reqRecoveryCode;
     }
 }
