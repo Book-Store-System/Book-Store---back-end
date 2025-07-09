@@ -39,6 +39,10 @@ public class UserController {
     private AuthenticationManager authenticationManager;
     private TokenService tokenService;
 
+    private static void logErrorMessage() {
+        log.error("Unexpected error. Passwords don't match!");
+    }
+
     @Operation(
             summary = "Find user",
             description = "Method to find a user by email",
@@ -52,6 +56,18 @@ public class UserController {
             throw new UserErrorException("User not found", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(modelMapper.map(user, UserRespDto.class));
+    }
+
+    @Operation(
+            summary = "send recovery code",
+            description = "method to send the recovery code by email",
+            tags = "Auth"
+    )
+    @PostMapping("/send_recovery_code")
+    public ResponseEntity<?> sendRecoveryCode(@RequestBody ReqPasswordRecovery reqEmail) {
+        boolean response = userService.passwordRecoveryCode(reqEmail);
+        return response ? ResponseEntity.ok(new RespMessage("Code sent")) :
+                ResponseEntity.badRequest().body(new RespMessage("Code not sent"));
     }
 
     @Operation(
@@ -103,19 +119,33 @@ public class UserController {
         return ResponseEntity.ok(new ResponseToken(token));
     }
 
-   
+    @Operation(
+            summary = "Recovery code verification",
+            method = "Method to verify the recovery code",
+            tags = "Auth"
+    )
+    @PostMapping("/verify_recovery_code")
+    public ResponseEntity<RespIsRecoveryCode> verifyRecoveryCode(
+            @RequestBody @Valid ReqIsCodeRecoveryCode reqIsCodeRecoveryCode) {
+        return ResponseEntity.ok(
+                new RespIsRecoveryCode(userService.isRecoveryCode(reqIsCodeRecoveryCode.recoveryCode()))
+        );
+    }
 
     @Operation(
-            summary = "Edit User",
-            method =  "Method to edit a user",
-            tags = "User"
+            summary = "Change recovery password",
+            method = "Method to change recovery password",
+            tags = "Auth"
     )
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid UserEditReqDTO userEditReqDTO){
-        if (userService.updateUser(id, userEditReqDTO))
-            return ResponseEntity.ok(new RespIdDto(userComponent.extractUser(id).getId()));
-        log.error(UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED);
-        throw new UserErrorException(UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED, HttpStatus.INTERNAL_SERVER_ERROR);
+    @PutMapping("/recovery_password")
+    public ResponseEntity<?> changeUserRecoveryPassword(@RequestParam String email,
+                                                @RequestBody @Valid PasswordEditReqDto passwordEditReqDto){
+        if (userService.updateUserPassword(email, passwordEditReqDto)) {
+            User user = userComponent.extractUser(email);
+            return ResponseEntity.ok(new RespIdDto(user.getId()));
+        }
+        logErrorMessage();
+        throw new UserErrorException("Unexpected error. Passwords don't match!", HttpStatus.BAD_REQUEST);
     }
 
     @Operation(
@@ -126,12 +156,25 @@ public class UserController {
     @PutMapping("/{id}/password")
     public ResponseEntity<?> changeUserPassword(@PathVariable Long id,
                                                 @RequestBody @Valid PasswordEditReqDto passwordEditReqDto){
-       if(userService.updateUserPassword(id, passwordEditReqDto)){
-           User user = userComponent.extractUser(id);
-           return ResponseEntity.ok(new RespIdDto(user.getId()));
-       }
-       log.error("Unexpected error. Passwords don't match!");
-       throw new UserErrorException("Unexpected error. Passwords don't match!", HttpStatus.BAD_REQUEST);
+        if (userService.updateUserPassword(id, passwordEditReqDto)) {
+            User user = userComponent.extractUser(id);
+            return ResponseEntity.ok(new RespIdDto(user.getId()));
+        }
+        logErrorMessage();
+        throw new UserErrorException("Unexpected error. Passwords don't match!", HttpStatus.BAD_REQUEST);
+    }
+
+    @Operation(
+            summary = "Edit User",
+            method = "Method to edit a user",
+            tags = "User"
+    )
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid UserEditReqDTO userEditReqDTO) {
+        if (userService.updateUser(id, userEditReqDTO))
+            return ResponseEntity.ok(new RespIdDto(userComponent.extractUser(id).getId()));
+        log.error(UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED);
+        throw new UserErrorException(UNEXPECTED_ERROR_USER_DATA_NOT_CHANGED, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Operation(
