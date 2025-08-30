@@ -21,7 +21,7 @@ public class Address {
     private Integer number;
     private String reference;
     @Column(name = "address_default")
-    private Boolean addressDefault;
+    private boolean addressDefault;
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
